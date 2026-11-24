@@ -15,3 +15,9 @@ def test_ruta_inexistente_usa_formato_de_error():
     r = client.get("/no-existe")
     assert r.status_code == 404
     assert r.json()["error"]["codigo"] == "NO_ENCONTRADO"
+
+
+def test_raiz_redirige_a_docs():
+    r = client.get("/", follow_redirects=False)
+    assert r.status_code in (302, 307)
+    assert r.headers["location"] == "/docs"

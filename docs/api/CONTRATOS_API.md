@@ -1,6 +1,12 @@
 # LeadLaunch — Contratos de la API REST
 **Responsable:** César · Cualquier cambio se avisa en el grupo antes del push.
 
+## URL del backend desplegado
+- **Base:** `https://leadlaunch-api.onrender.com/api/v1`
+- **Swagger:** https://leadlaunch-api.onrender.com/docs
+- **Salud:** https://leadlaunch-api.onrender.com/health · https://leadlaunch-api.onrender.com/health/db
+- Plan gratuito de Render: tras 15 min sin uso el servidor "duerme" y la primera llamada puede tardar ~50 s. En la app, usar timeouts de al menos 60 s y un loader.
+
 ## Estado de implementación
 | Endpoint | Estado |
 |---|---|
