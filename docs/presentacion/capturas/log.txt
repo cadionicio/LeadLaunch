@@ -1,0 +1,22 @@
+﻿Inicio: 11/24/2026 14:49:10
+SDK: C:\Users\VICTUS\AppData\Local\Android\Sdk
+JAVA_HOME: C:\Program Files\Android\Android Studio\jbr
+Iniciando emulador: Medium_Phone
+Esperando a que Android termine de arrancar (hasta 5 min)...
+Dispositivo: emulator-5554	device
+Compilando APK (la primera vez puede tardar varios minutos)...
+Instalacion: Performing Streamed Install
+Success
+APK instalado.
+Captura: 01_login.png
+Login enviado (el servidor puede tardar ~50 s si estaba dormido)...
+Captura: 02_inicio.png
+Captura: 03_catalogo.png
+Captura: 04_reglas.png
+Captura: 05_radar.png
+Captura: 06_hallazgos_fricciones.png
+Captura: 07_hallazgos_competidores.png
+Captura: 08_campanas_vista_previa.png
+Captura: 09_cotizaciones_vista_previa.png
+Captura: 10_perfil.png
+Fin: 11/24/2026 14:53:18. Capturas en C:\Users\VICTUS\Documents\Desarrillo Adaptativo e Integracion de Sistemas\TRABAJO FINAL\Leadlaunch\docs\presentacion\capturas
