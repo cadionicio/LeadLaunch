@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.core.database import close_pool
 from app.core.errors import registrar_manejadores
-from app.routers import health
+from app.routers import auth, businesses, health
 
 API_PREFIX = "/api/v1"
 
@@ -27,9 +27,9 @@ app = FastAPI(
 registrar_manejadores(app)
 
 app.include_router(health.router)
-# Próximos routers (CP1 y CP2), todos con prefix=API_PREFIX:
-# app.include_router(auth.router, prefix=API_PREFIX)
-# app.include_router(businesses.router, prefix=API_PREFIX)
+app.include_router(auth.router, prefix=API_PREFIX)
+app.include_router(businesses.router, prefix=API_PREFIX)
+# Próximos routers (CP2), todos con prefix=API_PREFIX:
 # app.include_router(products.router, prefix=API_PREFIX)
 # app.include_router(rules.router, prefix=API_PREFIX)
 # app.include_router(radar.router, prefix=API_PREFIX)

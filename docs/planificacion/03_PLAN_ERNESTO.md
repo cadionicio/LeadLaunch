@@ -19,7 +19,7 @@
 - [ ] Clonar el repo y cambiar a `ernesto/db-qa` (ver `00_PLAN_GENERAL.md` §5.2).
 - [ ] Crear cuenta y proyecto en Neon (región más cercana, PostgreSQL 15+).
 - [ ] Copiar el DDL del documento maestro (§4.3) en `database/01_ddl.sql` **sin el bloque de semilla** y la semilla (rubros + tipos de fricción) en `database/02_seed.sql`.
-- [ ] Ejecutar ambos scripts en el SQL Editor de Neon y verificar que existen las 13 tablas, la vista materializada y los triggers.
+- [ ] Ejecutar ambos scripts en el SQL Editor de Neon y verificar que existen las 14 tablas, la vista materializada y los triggers.
 - [ ] Enviar a César el `DATABASE_URL` **por privado** (nunca en el repo ni en el grupo).
 - [ ] Commit + push y PR → `develop`.
 

@@ -1,7 +1,32 @@
 # LeadLaunch — Contratos de la API REST
 **Responsable:** César · Cualquier cambio se avisa en el grupo antes del push.
 
-**Estado:** todos los endpoints de Fase 1 están *pendientes de implementar* (solo existe `GET /health` y `GET /health/db`).
+## Estado de implementación
+| Endpoint | Estado |
+|---|---|
+| `GET /health`, `GET /health/db` | ✅ Implementado |
+| `POST /auth/register` | ✅ Implementado (CP1) |
+| `POST /auth/login` | ✅ Implementado (CP1) |
+| `POST /businesses` | ✅ Implementado (CP1) |
+| `GET /businesses/{id}` | ✅ Implementado (CP1) · extra, para S17/S04 edición |
+| `GET /businesses/{id}/dashboard` | ⏳ CP2 |
+| `POST`/`GET /businesses/{id}/products` | ⏳ CP2 |
+| `GET`/`PUT /businesses/{id}/rules` | ⏳ CP2 |
+| `POST /businesses/{id}/radar/scan` | ⏳ CP2 |
+
+## Notas de comportamiento (CP1)
+- **Contraseña:** 8–64 caracteres, al menos una mayúscula y un número. Si no cumple → `422`, `campos: ["password"]`.
+- **Correo:** se guarda en minúsculas. Correo ya registrado → `422 CORREO_REGISTRADO`, `campos: ["correo"]`.
+- **Login fallido** (correo o contraseña) → `401 CREDENCIALES_INVALIDAS`, mensaje "No pudimos iniciar sesión. Revisa tus datos.".
+- **Token:** dura 24 h. Sin token o token inválido/expirado → `401 NO_AUTENTICADO` (la app debe limpiar sesión e ir a S02).
+- **Alta de negocio:** crea también la política por defecto y las reglas base (`RECARGO_EXPRESS` 15 %, `DESC_BIENVENIDA` 10 %).
+  - Un negocio por cuenta en el MVP: segundo intento → `400 NEGOCIO_EXISTENTE`.
+  - `rubro_id` inexistente → `422 RUBRO_INVALIDO`.
+  - `whatsapp_numero`: solo dígitos, 10–15, con código de país (ej. `51987654321`).
+  - Lat/long se redondean a 6 decimales; radio a 2 (0.5–25).
+- **Negocio de otro usuario** → `404 NEGOCIO_NO_ENCONTRADO` (aislamiento multi-tenant).
+- La respuesta de negocio incluye `rubro_nombre`, `activo` y `creado_en` además de los campos enviados.
+
 
 ## Fase 1
 
