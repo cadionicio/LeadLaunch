@@ -65,6 +65,7 @@ fun CampaignCreateScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
+            SimulatedDataBanner(Modifier.padding(bottom = 12.dp))
             Text(
                 text = "Convierte las debilidades de tu competencia en una campaña lista para publicar.",
                 style = MaterialTheme.typography.bodyMedium

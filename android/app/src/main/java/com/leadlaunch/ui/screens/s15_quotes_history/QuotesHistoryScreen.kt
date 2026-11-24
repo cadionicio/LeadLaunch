@@ -88,6 +88,7 @@ fun QuotesHistoryScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
+            SimulatedDataBanner(Modifier.padding(bottom = 12.dp))
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },

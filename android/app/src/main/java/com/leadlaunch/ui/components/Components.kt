@@ -569,3 +569,36 @@ fun BottomNavBar(
         }
     }
 }
+
+/**
+ * Aviso para pantallas de Fase 2 que aún usan datos simulados (AppConfig.USE_MOCK_PHASE2).
+ * Desaparece solo cuando se conecten al backend real.
+ */
+@Composable
+fun SimulatedDataBanner(modifier: Modifier = Modifier) {
+    if (!com.leadlaunch.data.remote.AppConfig.USE_MOCK_PHASE2) return
+    Surface(
+        color = WarningSoft,
+        shape = RoundedCornerShape(10.dp),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = null,
+                tint = WarningAmber,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "Vista previa con datos simulados (Fase 2)",
+                color = WarningAmber,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}

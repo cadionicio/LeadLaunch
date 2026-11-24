@@ -23,6 +23,7 @@ import com.leadlaunch.data.remote.QuoteResponse
 import com.leadlaunch.data.repository.BusinessRepository
 import com.leadlaunch.data.repository.QuoteRepository
 import com.leadlaunch.ui.components.AppBar
+import com.leadlaunch.ui.components.SimulatedDataBanner
 import com.leadlaunch.ui.components.CardKPI
 import com.leadlaunch.ui.components.EmptyState
 import com.leadlaunch.ui.components.formatSoles
@@ -72,6 +73,7 @@ fun AnalyticsScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
+            SimulatedDataBanner(Modifier.padding(bottom = 12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf("Últimos 7 días", "Últimos 30 días", "Últimos 90 días").forEach { period ->
                     FilterChip(
