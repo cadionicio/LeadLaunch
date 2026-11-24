@@ -152,8 +152,8 @@ fun CreateProductScreen(
                             when (val res = productRepository.createProduct(req)) {
                                 is ApiResult.Success -> onProductCreated()
                                 is ApiResult.Error -> {
-                                    if (res.fieldErrors.containsKey("sku") || res.code == "DUPLICATE_SKU") {
-                                        skuError = res.fieldErrors["sku"] ?: "SKU duplicado."
+                                    if ("sku" in res.errorFields || res.code == "SKU_DUPLICADO") {
+                                        skuError = res.message
                                     } else {
                                         snackbarHostState.showSnackbar(res.message)
                                     }

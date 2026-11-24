@@ -9,7 +9,7 @@ sealed class ApiResult<out T> {
     data class Error(
         val message: String,
         val code: String? = null,
-        val fieldErrors: Map<String, String> = emptyMap(),
+        val errorFields: List<String> = emptyList(),
         val isUnauthorized: Boolean = false,
         val isNetworkError: Boolean = false
     ) : ApiResult<Nothing>()
@@ -32,7 +32,7 @@ suspend fun <T> safeApiCall(block: suspend () -> T): ApiResult<T> {
                 else -> "Ocurrió un error en el servidor ($statusCode)."
             },
             code = parsed?.codigo,
-            fieldErrors = parsed?.campos ?: emptyMap(),
+            errorFields = parsed?.campos ?: emptyList(),
             isUnauthorized = statusCode == 401
         )
     } catch (e: IOException) {

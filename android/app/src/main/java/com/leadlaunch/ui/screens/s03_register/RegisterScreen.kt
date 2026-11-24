@@ -115,7 +115,7 @@ fun RegisterScreen(
                                         snackbarHostState.showSnackbar("Sin internet. Reintentar")
                                     } else {
                                         // Error junto al campo sin borrar lo demás
-                                        emailError = res.fieldErrors["correo"] ?: res.message
+                                        emailError = if ("correo" in res.errorFields) res.message else res.message
                                     }
                                 }
                             }

@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.leadlaunch.data.remote.ApiResult
-import com.leadlaunch.data.remote.RulesDto
+import com.leadlaunch.data.remote.PolicyPayloadDto
+import com.leadlaunch.data.remote.RuleItemDto
+import com.leadlaunch.data.remote.RulesConfigPayload
 import com.leadlaunch.data.repository.RulesRepository
 import com.leadlaunch.ui.components.AppBar
 import com.leadlaunch.ui.components.AppTextField
@@ -38,16 +40,24 @@ fun RulesScreen(
     var permiteDescBienvenida by remember { mutableStateOf(true) }
     var descBienvenidaText by remember { mutableStateOf("10") }
     var aceptaYapePlin by remember { mutableStateOf(true) }
+    var horarioAtencion by remember { mutableStateOf("09:00 - 20:00") }
+    var permiteAcumularDesc by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         loading = true
         when (val res = rulesRepository.getRules()) {
             is ApiResult.Success -> {
-                permiteExpress = res.data.permiteExpress
-                recargoExpressText = res.data.recargoExpressPct.toInt().toString()
-                permiteDescBienvenida = res.data.permiteDescBienvenida
-                descBienvenidaText = res.data.descBienvenidaPct.toInt().toString()
-                aceptaYapePlin = res.data.aceptaYapePlin
+                permiteExpress = res.data.politica.permiteExpress
+                aceptaYapePlin = res.data.politica.aceptaYapePlin
+                horarioAtencion = res.data.politica.horarioAtencion
+                permiteAcumularDesc = res.data.politica.permiteAcumularDesc
+
+                val expressRule = res.data.reglas.find { it.tipoRegla == "RECARGO_EXPRESS" }
+                val welcomeRule = res.data.reglas.find { it.tipoRegla == "DESC_BIENVENIDA" }
+
+                recargoExpressText = (expressRule?.valorPorcentaje ?: 15.0).toInt().toString()
+                permiteDescBienvenida = welcomeRule?.activa ?: true
+                descBienvenidaText = (welcomeRule?.valorPorcentaje ?: 10.0).toInt().toString()
             }
             is ApiResult.Error -> snackbarHostState.showSnackbar(res.message)
         }
@@ -156,12 +166,25 @@ fun RulesScreen(
                     onClick = {
                         scope.launch {
                             saving = true
-                            val payload = RulesDto(
-                                permiteExpress = permiteExpress,
-                                recargoExpressPct = recargoExpressText.toDoubleOrNull()?.coerceIn(0.0, 100.0) ?: 0.0,
-                                permiteDescBienvenida = permiteDescBienvenida,
-                                descBienvenidaPct = descBienvenidaText.toDoubleOrNull()?.coerceIn(0.0, 100.0) ?: 0.0,
-                                aceptaYapePlin = aceptaYapePlin
+                            val payload = RulesConfigPayload(
+                                politica = PolicyPayloadDto(
+                                    permiteExpress = permiteExpress,
+                                    permiteAcumularDesc = permiteAcumularDesc,
+                                    aceptaYapePlin = aceptaYapePlin,
+                                    horarioAtencion = horarioAtencion
+                                ),
+                                reglas = listOf(
+                                    RuleItemDto(
+                                        tipoRegla = "RECARGO_EXPRESS",
+                                        valorPorcentaje = recargoExpressText.toDoubleOrNull()?.coerceIn(0.0, 100.0) ?: 0.0,
+                                        activa = permiteExpress
+                                    ),
+                                    RuleItemDto(
+                                        tipoRegla = "DESC_BIENVENIDA",
+                                        valorPorcentaje = descBienvenidaText.toDoubleOrNull()?.coerceIn(0.0, 100.0) ?: 0.0,
+                                        activa = permiteDescBienvenida
+                                    )
+                                )
                             )
                             when (val res = rulesRepository.updateRules(payload)) {
                                 is ApiResult.Success -> snackbarHostState.showSnackbar("Reglas actualizadas")

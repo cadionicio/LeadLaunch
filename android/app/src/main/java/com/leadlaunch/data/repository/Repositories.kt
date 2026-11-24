@@ -15,7 +15,7 @@ class AuthRepository(
         }
         if (result is ApiResult.Success) {
             sessionStore.saveAuth(
-                token = result.data.token,
+                token = result.data.accessToken,
                 name = result.data.usuario.nombreCompleto,
                 email = result.data.usuario.correo,
                 businessId = result.data.negocioId
@@ -32,7 +32,7 @@ class AuthRepository(
         }
         if (result is ApiResult.Success) {
             sessionStore.saveAuth(
-                token = result.data.token,
+                token = result.data.accessToken,
                 name = result.data.usuario.nombreCompleto,
                 email = result.data.usuario.correo,
                 businessId = result.data.negocioId
@@ -97,7 +97,7 @@ class RulesRepository(
     private val api: ApiService,
     private val sessionStore: SessionStore
 ) {
-    suspend fun getRules(): ApiResult<RulesDto> {
+    suspend fun getRules(): ApiResult<RulesConfigPayload> {
         val businessId = sessionStore.getSession().businessId ?: "neg-demo-001"
         return if (AppConfig.USE_MOCK_API) {
             MockBackend.getRules()
@@ -106,12 +106,12 @@ class RulesRepository(
         }
     }
 
-    suspend fun updateRules(rules: RulesDto): ApiResult<RulesDto> {
+    suspend fun updateRules(payload: RulesConfigPayload): ApiResult<RulesConfigPayload> {
         val businessId = sessionStore.getSession().businessId ?: "neg-demo-001"
         return if (AppConfig.USE_MOCK_API) {
-            MockBackend.updateRules(rules)
+            MockBackend.updateRules(payload)
         } else {
-            safeApiCall { api.updateRules(businessId, rules) }
+            safeApiCall { api.updateRules(businessId, payload) }
         }
     }
 }

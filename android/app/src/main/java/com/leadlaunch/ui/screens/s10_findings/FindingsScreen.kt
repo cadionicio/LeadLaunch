@@ -29,6 +29,14 @@ fun FindingsScreen(
     val scan = radarRepository.getLastCachedScan()
     var selectedTab by remember { mutableIntStateOf(0) }
 
+    val allFindings = remember(scan) {
+        scan?.competidores?.flatMap { comp ->
+            comp.fricciones.map { friction ->
+                Pair(comp.nombre, friction)
+            }
+        } ?: emptyList()
+    }
+
     Scaffold(
         containerColor = BackgroundLight,
         topBar = { AppBar(title = "Hallazgos del Radar", onBack = onBack) }
@@ -58,7 +66,12 @@ fun FindingsScreen(
                             modifier = Modifier.padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.Outlined.Info, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(18.dp))
+                            Icon(
+                                imageVector = Icons.Outlined.Info,
+                                contentDescription = null,
+                                tint = WarningAmber,
+                                modifier = Modifier.size(18.dp)
+                            )
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = "Datos de referencia (demo)",
@@ -78,7 +91,7 @@ fun FindingsScreen(
                     Tab(
                         selected = selectedTab == 0,
                         onClick = { selectedTab = 0 },
-                        text = { Text("Fricciones (${scan.hallazgos.size})") }
+                        text = { Text("Fricciones (${allFindings.size})") }
                     )
                     Tab(
                         selected = selectedTab == 1,
@@ -92,7 +105,7 @@ fun FindingsScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     if (selectedTab == 0) {
-                        items(scan.hallazgos, key = { it.hallazgoId }) { h ->
+                        items(allFindings) { (competitorName, friction) ->
                             Card(
                                 shape = RoundedCornerShape(14.dp),
                                 colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
@@ -105,20 +118,27 @@ fun FindingsScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text(h.competidorNombre, style = MaterialTheme.typography.titleMedium)
+                                        Text(competitorName, style = MaterialTheme.typography.titleMedium)
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Icon(Icons.Filled.Star, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(16.dp))
-                                            Text(" ${h.calificacion}.0", fontWeight = FontWeight.Bold, color = TextPrimary)
+                                            Icon(
+                                                imageVector = Icons.Filled.Star,
+                                                contentDescription = null,
+                                                tint = WarningAmber,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Text(
+                                                text = " ${friction.calificacion}.0",
+                                                fontWeight = FontWeight.Bold,
+                                                color = TextPrimary
+                                            )
                                         }
                                     }
                                     Spacer(Modifier.height(6.dp))
-                                    FrictionChip(h.tipoFriccion)
+                                    FrictionChip(friction.tipoNombre)
                                     Spacer(Modifier.height(8.dp))
-                                    Text(""${h.textoResena}"", style = MaterialTheme.typography.bodyMedium)
-                                    Spacer(Modifier.height(6.dp))
                                     Text(
-                                        text = "Oportunidad: ${h.resumenDolor}",
-                                        style = MaterialTheme.typography.labelMedium,
+                                        text = "Oportunidad: ${friction.resumenDolor}",
+                                        style = MaterialTheme.typography.bodyMedium,
                                         color = PrimaryDark
                                     )
                                 }
@@ -133,16 +153,26 @@ fun FindingsScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
-                                    modifier = Modifier.fillMaxWidth().padding(14.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(14.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Column {
                                         Text(c.nombre, style = MaterialTheme.typography.titleMedium)
-                                        Text(c.distrito, style = MaterialTheme.typography.bodyMedium)
+                                        Text(
+                                            text = "${c.distrito} · ${c.fricciones.size} fricción(es)",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
                                     }
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(Icons.Filled.Star, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(18.dp))
+                                        Icon(
+                                            imageVector = Icons.Filled.Star,
+                                            contentDescription = null,
+                                            tint = WarningAmber,
+                                            modifier = Modifier.size(18.dp)
+                                        )
                                         Text(" ${c.calificacionProm}", fontWeight = FontWeight.Bold)
                                     }
                                 }
