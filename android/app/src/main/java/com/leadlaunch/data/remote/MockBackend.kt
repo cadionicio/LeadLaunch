@@ -1,7 +1,10 @@
 package com.leadlaunch.data.remote
 
+import android.net.Uri
 import kotlinx.coroutines.delay
+import java.util.Locale
 import java.util.UUID
+import kotlin.math.roundToInt
 
 object MockBackend {
 
@@ -58,6 +61,68 @@ object MockBackend {
     )
 
     var lastScan: RadarScanResponse? = null
+    var lastCampaign: CampaignResponse? = null
+    var lastQuote: QuoteResponse? = null
+
+    val quotes = mutableListOf(
+        QuoteResponse(
+            cotizacionId = "cot-demo-0278",
+            codigo = "COT-0278",
+            nombreProspecto = "María Torres",
+            telefonoProspecto = "51987654321",
+            esEntregaExpress = true,
+            esClienteNuevo = true,
+            subtotal = 205.00,
+            montoRecargo = 30.75,
+            montoDescuento = 20.50,
+            totalNeto = 215.25,
+            mensajeWhatsapp = "Hola María, aquí tienes tu cotización de Dulce Punto:\n- 1x Torta de Chocolate (S/ 75.00)\n- 2x Cheesecake de Frutos (S/ 130.00)\nRecargo Express (15%): S/ 30.75\nDescuento Bienvenida (10%): -S/ 20.50\nTotal a pagar: S/ 215.25\nAceptamos Yape y Plin.",
+            whatsappUrl = "https://wa.me/51987654321?text=Hola%20Mar%C3%ADa%2C%20aqu%C3%AD%20tienes%20tu%20cotizaci%C3%B3n%20por%20S%2F%20215.25",
+            estado = "ENVIADA_WA",
+            creadoEn = "Hoy · 10:15",
+            detalles = listOf(
+                QuoteDetailDto("prod-001", "Torta de Chocolate Artesanal", 1, 75.00, 75.00),
+                QuoteDetailDto("prod-002", "Cheesecake de Frutos", 2, 65.00, 130.00)
+            )
+        ),
+        QuoteResponse(
+            cotizacionId = "cot-demo-0277",
+            codigo = "COT-0277",
+            nombreProspecto = "Carlos Mendoza",
+            telefonoProspecto = "51999111222",
+            esEntregaExpress = false,
+            esClienteNuevo = false,
+            subtotal = 123.00,
+            montoRecargo = 0.00,
+            montoDescuento = 0.00,
+            totalNeto = 123.00,
+            mensajeWhatsapp = "Hola Carlos, tu pedido está cotizado en S/ 123.00.",
+            estado = "GANADA",
+            creadoEn = "Ayer · 18:40",
+            detalles = listOf(
+                QuoteDetailDto("prod-001", "Torta de Chocolate Artesanal", 1, 75.00, 75.00),
+                QuoteDetailDto("prod-002", "Caja de 12 Cupcakes Red Velvet", 1, 48.00, 48.00)
+            )
+        ),
+        QuoteResponse(
+            cotizacionId = "cot-demo-0276",
+            codigo = "COT-0276",
+            nombreProspecto = "Lucía Prado",
+            telefonoProspecto = "51988222333",
+            esEntregaExpress = false,
+            esClienteNuevo = true,
+            subtotal = 75.00,
+            montoRecargo = 0.00,
+            montoDescuento = 7.50,
+            totalNeto = 67.50,
+            mensajeWhatsapp = "Hola Lucía, tu cotización con 10% de bienvenida es S/ 67.50.",
+            estado = "EMITIDA",
+            creadoEn = "Ayer · 14:20",
+            detalles = listOf(
+                QuoteDetailDto("prod-001", "Torta de Chocolate Artesanal", 1, 75.00, 75.00)
+            )
+        )
+    )
 
     suspend fun login(request: LoginRequest): ApiResult<AuthResponse> {
         delay(450)
@@ -147,6 +212,11 @@ object MockBackend {
         )
         val activeCount = products.count { it.activo && it.stockDisponible > 0 }
         val findingsCount = lastScan?.totalFricciones ?: 4
+        val wonQuotes = quotes.filter { it.estado == "GANADA" }
+        val totalQuotes = quotes.size
+        val wonAmount = wonQuotes.sumOf { it.totalNeto }
+        val convRate = if (totalQuotes > 0) ((wonQuotes.size.toDouble() / totalQuotes) * 1000.0).roundToInt() / 10.0 else 0.0
+
         return ApiResult.Success(
             DashboardResponse(
                 negocioId = biz.negocioId,
@@ -154,13 +224,14 @@ object MockBackend {
                 rubroNombre = "Repostería y Pastelería Artesanal",
                 distrito = biz.distrito,
                 totalEscaneos = if (lastScan != null) 2 else 1,
-                totalCotizaciones = 13,
-                totalVentasGanadas = 5,
-                montoVentasGanadas = 415.00,
-                tasaConversionPct = 38.5,
+                totalCotizaciones = totalQuotes,
+                totalVentasGanadas = wonQuotes.size,
+                montoVentasGanadas = wonAmount,
+                tasaConversionPct = convRate,
                 productosActivos = activeCount,
                 friccionesDetectadas = findingsCount,
-                ultimaAlertaAdaptativa = "3 pastelerías cercanas tienen quejas por demora en entregas de fin de semana. Destaca tu servicio Express de 6 horas."
+                ultimaAlertaAdaptativa = lastCampaign?.alertaAdaptativa
+                    ?: "3 pastelerías cercanas tienen quejas por demora en entregas de fin de semana. Destaca tu servicio Express de 6 horas."
             )
         )
     }
@@ -261,4 +332,126 @@ object MockBackend {
         lastScan = scan
         return ApiResult.Success(scan)
     }
+
+    // --- FASE 2: Mock de Campañas IA (CP3) ---
+    suspend fun generateCampaign(request: CampaignGenerateRequest): ApiResult<CampaignResponse> {
+        delay(1200)
+        val frictionsText = request.fricciones.ifEmpty { listOf("Demora en entrega", "Sin stock") }.joinToString(", ")
+        val bizName = currentBusiness?.razonComercial ?: "tu negocio"
+        val campaign = CampaignResponse(
+            campanaId = "camp-${UUID.randomUUID().toString().take(8)}",
+            alertaAdaptativa = "Oportunidad basada en ($frictionsText): destaca tu preparación ágil y confirmación inmediata por WhatsApp para diferenciarte en tu distrito.",
+            postRedes = "¿Buscas un postre fresco sin esperar horas ni sorpresas en el envío? En $bizName preparamos tu pedido con horario garantizado y precios transparentes. Escríbenos hoy por WhatsApp y aprovecha tu beneficio de bienvenida. (${request.objetivo} · Tono: ${request.tono})",
+            guionReel15s = "0-3s (Gancho): ¿Te ha pasado que pides una torta y llega tarde?\n4-10s (Propuesta): En $bizName horneamos al día y te confirmamos hora exacta de entrega, incluso en modalidad Express.\n11-15s (CTA): Haz clic en el enlace de WhatsApp y recibe tu cotización en menos de 1 minuto.",
+            estado = "BORRADOR",
+            creadoEn = "Ahora"
+        )
+        lastCampaign = campaign
+        return ApiResult.Success(campaign)
+    }
+
+    // --- FASE 2: Mock de Cotizaciones (CP4 y CP5) ---
+    suspend fun createQuote(
+        request: QuoteCreateRequest,
+        catalogSnapshot: List<ProductDto>,
+        rules: RulesConfigPayload = rulesConfig,
+        businessName: String = currentBusiness?.razonComercial ?: "LeadLaunch"
+    ): ApiResult<QuoteResponse> {
+        delay(500)
+        if (request.esEntregaExpress && !rules.politica.permiteExpress) {
+            return ApiResult.Error(
+                message = "Tu política comercial actual no permite entregas Express. Actívala en Reglas de precios.",
+                code = "REGLA_NEGOCIO"
+            )
+        }
+
+        val detalles = request.items.mapNotNull { item ->
+            val prod = catalogSnapshot.find { it.productoId == item.productoId }
+                ?: products.find { it.productoId == item.productoId }
+            prod?.let {
+                val lineTotal = round2(it.precioBase * item.cantidad)
+                QuoteDetailDto(
+                    productoId = it.productoId,
+                    nombreProducto = it.nombre,
+                    cantidad = item.cantidad,
+                    precioUnitarioSnap = it.precioBase,
+                    importeLinea = lineTotal
+                )
+            }
+        }
+
+        if (detalles.isEmpty()) {
+            return ApiResult.Error("Selecciona al menos un producto válido.")
+        }
+
+        val subtotal = round2(detalles.sumOf { it.importeLinea })
+        val expressPct = rules.reglas.find { it.tipoRegla == "RECARGO_EXPRESS" && it.activa }?.valorPorcentaje ?: 0.0
+        val welcomePct = rules.reglas.find { it.tipoRegla == "DESC_BIENVENIDA" && it.activa }?.valorPorcentaje ?: 0.0
+
+        val recargo = if (request.esEntregaExpress) round2(subtotal * expressPct / 100.0) else 0.0
+        val descuento = if (request.esClienteNuevo) round2(subtotal * welcomePct / 100.0) else 0.0
+        val totalNeto = round2(subtotal + recargo - descuento)
+
+        val code = "COT-${(1000..9999).random()}"
+        val linesText = detalles.joinToString("\n") {
+            "• ${it.cantidad}x ${it.nombreProducto} (S/ ${String.format(Locale.US, "%.2f", it.importeLinea)})"
+        }
+        val msg = buildString {
+            append("Hola ${request.nombreProspecto}, aquí tienes tu cotización *$code* de *$businessName*:\n\n")
+            append(linesText)
+            append("\n\nSubtotal: S/ ${String.format(Locale.US, "%.2f", subtotal)}")
+            if (recargo > 0) append("\nRecargo Express (${expressPct.toInt()}%): +S/ ${String.format(Locale.US, "%.2f", recargo)}")
+            if (descuento > 0) append("\nDescuento Bienvenida (${welcomePct.toInt()}%): -S/ ${String.format(Locale.US, "%.2f", descuento)}")
+            append("\n*Total a pagar: S/ ${String.format(Locale.US, "%.2f", totalNeto)}*")
+            if (rules.politica.aceptaYapePlin) append("\n\nAceptamos Yape y Plin. ¿Confirmamos tu pedido?")
+        }
+
+        val cleanPhone = request.telefonoProspecto?.filter { it.isDigit() }.orEmpty()
+        val encodedMsg = Uri.encode(msg)
+        val waUrl = if (cleanPhone.isNotBlank()) {
+            "https://wa.me/$cleanPhone?text=$encodedMsg"
+        } else {
+            "https://wa.me/?text=$encodedMsg"
+        }
+
+        val created = QuoteResponse(
+            cotizacionId = "cot-${UUID.randomUUID().toString().take(8)}",
+            codigo = code,
+            nombreProspecto = request.nombreProspecto,
+            telefonoProspecto = request.telefonoProspecto,
+            esEntregaExpress = request.esEntregaExpress,
+            esClienteNuevo = request.esClienteNuevo,
+            subtotal = subtotal,
+            montoRecargo = recargo,
+            montoDescuento = descuento,
+            totalNeto = totalNeto,
+            mensajeWhatsapp = msg,
+            whatsappUrl = waUrl,
+            estado = "EMITIDA",
+            creadoEn = "Ahora",
+            detalles = detalles
+        )
+        quotes.add(0, created)
+        lastQuote = created
+        return ApiResult.Success(created)
+    }
+
+    suspend fun getQuotes(): ApiResult<QuoteListResponse> {
+        delay(250)
+        return ApiResult.Success(QuoteListResponse(items = quotes.toList(), total = quotes.size))
+    }
+
+    suspend fun updateQuoteStatus(quoteId: String, newStatus: String): ApiResult<QuoteResponse> {
+        delay(300)
+        val idx = quotes.indexOfFirst { it.cotizacionId == quoteId }
+        if (idx == -1) return ApiResult.Error("Cotización no encontrada.")
+        val updated = quotes[idx].copy(estado = newStatus)
+        quotes[idx] = updated
+        if (lastQuote?.cotizacionId == quoteId) {
+            lastQuote = updated
+        }
+        return ApiResult.Success(updated)
+    }
+
+    private fun round2(value: Double): Double = (value * 100.0).roundToInt() / 100.0
 }

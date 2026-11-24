@@ -13,9 +13,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.leadlaunch.data.local.SessionStore
 import com.leadlaunch.data.repository.*
 import com.leadlaunch.ui.components.BottomNavBar
-import com.leadlaunch.ui.screens.phase2.CampaignsPlaceholderScreen
-import com.leadlaunch.ui.screens.phase2.MoreScreen
-import com.leadlaunch.ui.screens.phase2.QuotesPlaceholderScreen
 import com.leadlaunch.ui.screens.s01_splash.SplashScreen
 import com.leadlaunch.ui.screens.s02_login.LoginScreen
 import com.leadlaunch.ui.screens.s03_register.RegisterScreen
@@ -26,6 +23,13 @@ import com.leadlaunch.ui.screens.s07_product.CreateProductScreen
 import com.leadlaunch.ui.screens.s08_rules.RulesScreen
 import com.leadlaunch.ui.screens.s09_radar.RadarScreen
 import com.leadlaunch.ui.screens.s10_findings.FindingsScreen
+import com.leadlaunch.ui.screens.s11_campaigns.CampaignCreateScreen
+import com.leadlaunch.ui.screens.s12_campaign_result.CampaignResultScreen
+import com.leadlaunch.ui.screens.s13_quotes.CreateQuoteScreen
+import com.leadlaunch.ui.screens.s14_quote_preview.QuotePreviewScreen
+import com.leadlaunch.ui.screens.s15_quotes_history.QuotesHistoryScreen
+import com.leadlaunch.ui.screens.s16_analytics.AnalyticsScreen
+import com.leadlaunch.ui.screens.s17_profile.ProfileSettingsScreen
 
 @Composable
 fun LeadLaunchNavGraph(
@@ -35,7 +39,9 @@ fun LeadLaunchNavGraph(
     businessRepository: BusinessRepository,
     productRepository: ProductRepository,
     rulesRepository: RulesRepository,
-    radarRepository: RadarRepository
+    radarRepository: RadarRepository,
+    campaignRepository: CampaignRepository,
+    quoteRepository: QuoteRepository
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -115,7 +121,8 @@ fun LeadLaunchNavGraph(
                     businessRepository = businessRepository,
                     onOpenRadar = { navController.navigate(Routes.S09_RADAR) },
                     onOpenRules = { navController.navigate(Routes.S08_RULES) },
-                    onOpenCatalog = { navController.navigate(Routes.S06_CATALOG) }
+                    onOpenCatalog = { navController.navigate(Routes.S06_CATALOG) },
+                    onOpenAnalytics = { navController.navigate(Routes.S16_ANALYTICS) }
                 )
             }
 
@@ -152,17 +159,79 @@ fun LeadLaunchNavGraph(
             composable(Routes.S10_FINDINGS) {
                 FindingsScreen(
                     radarRepository = radarRepository,
+                    onCreateCampaign = { navController.navigate(Routes.S11_CAMPAIGNS) },
                     onBack = { navController.popBackStack() }
                 )
             }
 
-            composable(Routes.S15_QUOTES) { QuotesPlaceholderScreen() }
-            composable(Routes.S11_CAMPAIGNS) { CampaignsPlaceholderScreen() }
+            composable(Routes.S11_CAMPAIGNS) {
+                CampaignCreateScreen(
+                    radarRepository = radarRepository,
+                    campaignRepository = campaignRepository,
+                    onCampaignGenerated = { navController.navigate(Routes.S12_CAMPAIGN_RESULT) },
+                    onOpenRadar = { navController.navigate(Routes.S09_RADAR) }
+                )
+            }
+
+            composable(Routes.S12_CAMPAIGN_RESULT) {
+                CampaignResultScreen(
+                    campaignRepository = campaignRepository,
+                    onCreateQuote = { navController.navigate(Routes.S13_CREATE_QUOTE) },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Routes.S13_CREATE_QUOTE) {
+                CreateQuoteScreen(
+                    productRepository = productRepository,
+                    rulesRepository = rulesRepository,
+                    quoteRepository = quoteRepository,
+                    onQuoteCreated = {
+                        navController.navigate(Routes.S14_QUOTE_PREVIEW) {
+                            popUpTo(Routes.S13_CREATE_QUOTE) { inclusive = true }
+                        }
+                    },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Routes.S14_QUOTE_PREVIEW) {
+                QuotePreviewScreen(
+                    quoteRepository = quoteRepository,
+                    onDone = {
+                        navController.navigate(Routes.S15_QUOTES) {
+                            popUpTo(Routes.S15_QUOTES) { inclusive = true }
+                        }
+                    },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Routes.S15_QUOTES) {
+                QuotesHistoryScreen(
+                    quoteRepository = quoteRepository,
+                    onNewQuote = { navController.navigate(Routes.S13_CREATE_QUOTE) },
+                    onOpenQuote = { navController.navigate(Routes.S14_QUOTE_PREVIEW) }
+                )
+            }
+
+            composable(Routes.S16_ANALYTICS) {
+                AnalyticsScreen(
+                    businessRepository = businessRepository,
+                    quoteRepository = quoteRepository,
+                    onNewQuote = { navController.navigate(Routes.S13_CREATE_QUOTE) },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
             composable(Routes.S17_MORE) {
-                MoreScreen(
+                ProfileSettingsScreen(
+                    sessionStore = sessionStore,
                     authRepository = authRepository,
                     onOpenRadar = { navController.navigate(Routes.S09_RADAR) },
+                    onOpenFindings = { navController.navigate(Routes.S10_FINDINGS) },
                     onOpenRules = { navController.navigate(Routes.S08_RULES) },
+                    onOpenAnalytics = { navController.navigate(Routes.S16_ANALYTICS) },
                     onLogout = {
                         navController.navigate(Routes.S02_LOGIN) { popUpTo(0) { inclusive = true } }
                     }

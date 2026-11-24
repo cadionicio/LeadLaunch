@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +41,7 @@ fun PrimaryButton(
         enabled = enabled && !loading,
         modifier = modifier
             .fillMaxWidth()
-            .height(50.dp),
+            .heightIn(min = 50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = PrimaryBlue,
@@ -58,6 +59,37 @@ fun PrimaryButton(
         } else {
             Text(text = text, style = MaterialTheme.typography.labelLarge)
         }
+    }
+}
+
+@Composable
+fun WhatsAppButton(
+    text: String = "Enviar por WhatsApp",
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 52.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = SuccessGreen,
+            contentColor = SurfaceWhite,
+            disabledContainerColor = BorderColor,
+            disabledContentColor = TextSecondary
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Chat,
+            contentDescription = "Ícono de WhatsApp",
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(text = text, style = MaterialTheme.typography.labelLarge)
     }
 }
 
@@ -126,12 +158,17 @@ fun AppBar(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                color = TextPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {
             if (onBack != null) {
-                IconButton(onClick = onBack) {
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Volver",
@@ -169,9 +206,11 @@ fun CardKPI(
             Spacer(Modifier.height(6.dp))
             Text(
                 text = value,
-                fontSize = 22.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = accentColor
+                color = accentColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -196,7 +235,6 @@ fun ProductRow(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Placeholder con inicial (Decisión D7)
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -252,6 +290,104 @@ fun ProductRow(
 }
 
 @Composable
+fun QuoteLine(
+    product: ProductDto,
+    quantity: Int,
+    onQuantityChange: (Int) -> Unit
+) {
+    val selected = quantity > 0
+    val outOfStock = product.stockDisponible <= 0
+    val initial = product.nombre.firstOrNull()?.uppercaseChar()?.toString() ?: "P"
+
+    Card(
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) PrimarySoft.copy(alpha = 0.45f) else SurfaceWhite
+        ),
+        border = BorderStroke(1.dp, if (selected) PrimaryBlue else BorderColor),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = selected,
+                enabled = !outOfStock,
+                onCheckedChange = { checked ->
+                    onQuantityChange(if (checked) 1 else 0)
+                },
+                colors = CheckboxDefaults.colors(checkedColor = PrimaryBlue)
+            )
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(if (outOfStock) BorderColor else PrimarySoft),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = initial,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (outOfStock) TextSecondary else PrimaryBlue
+                )
+            }
+            Spacer(Modifier.width(10.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = product.nombre,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "${formatSoles(product.precioBase)} · Stock: ${product.stockDisponible}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (outOfStock) ErrorRed else TextSecondary
+                )
+            }
+            if (selected) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = { onQuantityChange((quantity - 1).coerceAtLeast(0)) },
+                        modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.RemoveCircleOutline,
+                            contentDescription = "Disminuir cantidad de ${product.nombre}",
+                            tint = PrimaryBlue
+                        )
+                    }
+                    Text(
+                        text = "$quantity",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    IconButton(
+                        onClick = {
+                            if (quantity < product.stockDisponible) {
+                                onQuantityChange(quantity + 1)
+                            }
+                        },
+                        enabled = quantity < product.stockDisponible,
+                        modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.AddCircleOutline,
+                            contentDescription = "Aumentar cantidad de ${product.nombre}",
+                            tint = if (quantity < product.stockDisponible) PrimaryBlue else TextSecondary
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun StatusBadge(
     text: String,
     bgColor: Color,
@@ -272,6 +408,18 @@ fun StatusBadge(
 }
 
 @Composable
+fun QuoteStatusBadge(estado: String) {
+    val (label, bg, fg) = when (estado.uppercase()) {
+        "EMITIDA" -> Triple("Emitida", PrimarySoft, PrimaryBlue)
+        "ENVIADA_WA" -> Triple("Enviada", IndigoSoft, IndigoAccent)
+        "GANADA" -> Triple("Ganada", SuccessSoft, SuccessGreen)
+        "PERDIDA" -> Triple("Perdida", ErrorSoft, ErrorRed)
+        else -> Triple(estado, BorderColor, TextSecondary)
+    }
+    StatusBadge(text = label, bgColor = bg, textColor = fg)
+}
+
+@Composable
 fun FrictionChip(text: String) {
     Surface(
         color = ErrorSoft,
@@ -288,6 +436,30 @@ fun FrictionChip(text: String) {
 }
 
 @Composable
+fun RemovableFrictionChip(
+    text: String,
+    onRemove: () -> Unit
+) {
+    InputChip(
+        selected = true,
+        onClick = onRemove,
+        label = { Text(text, fontSize = 12.sp) },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Close,
+                contentDescription = "Quitar fricción $text",
+                modifier = Modifier.size(16.dp)
+            )
+        },
+        colors = InputChipDefaults.inputChipColors(
+            selectedContainerColor = IndigoSoft,
+            selectedLabelColor = IndigoAccent,
+            selectedTrailingIconColor = IndigoAccent
+        )
+    )
+}
+
+@Composable
 fun SwitchRule(
     title: String,
     subtitle: String,
@@ -297,6 +469,7 @@ fun SwitchRule(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .heightIn(min = 48.dp)
             .padding(vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -304,6 +477,7 @@ fun SwitchRule(
             Text(text = title, style = MaterialTheme.typography.titleMedium)
             Text(text = subtitle, style = MaterialTheme.typography.bodyMedium)
         }
+        Spacer(Modifier.width(8.dp))
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -336,12 +510,20 @@ fun EmptyState(
             Icon(icon, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(32.dp))
         }
         Spacer(Modifier.height(12.dp))
-        Text(text = title, style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
+        )
         Spacer(Modifier.height(4.dp))
-        Text(text = subtitle, style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
         if (actionText != null && onAction != null) {
             Spacer(Modifier.height(16.dp))
-            PrimaryButton(text = actionText, onClick = onAction, modifier = Modifier.widthIn(max = 240.dp))
+            PrimaryButton(text = actionText, onClick = onAction, modifier = Modifier.widthIn(max = 260.dp))
         }
     }
 }

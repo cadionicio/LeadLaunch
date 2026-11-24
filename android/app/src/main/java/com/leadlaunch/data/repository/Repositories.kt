@@ -132,3 +132,69 @@ class RadarRepository(
 
     fun getLastCachedScan(): RadarScanResponse? = MockBackend.lastScan
 }
+
+class CampaignRepository(
+    private val api: ApiService,
+    private val sessionStore: SessionStore
+) {
+    suspend fun generateCampaign(request: CampaignGenerateRequest): ApiResult<CampaignResponse> {
+        val businessId = sessionStore.getSession().businessId ?: "neg-demo-001"
+        return if (AppConfig.USE_MOCK_API || AppConfig.USE_MOCK_PHASE2) {
+            MockBackend.generateCampaign(request)
+        } else {
+            safeApiCall { api.generateCampaign(businessId, request) }
+                .also { if (it is ApiResult.Success) MockBackend.lastCampaign = it.data }
+        }
+    }
+
+    fun getLastCampaign(): CampaignResponse? = MockBackend.lastCampaign
+}
+
+class QuoteRepository(
+    private val api: ApiService,
+    private val sessionStore: SessionStore
+) {
+    suspend fun createQuote(
+        request: QuoteCreateRequest,
+        catalogSnapshot: List<ProductDto> = emptyList(),
+        rulesSnapshot: RulesConfigPayload? = null
+    ): ApiResult<QuoteResponse> {
+        val session = sessionStore.getSession()
+        val businessId = session.businessId ?: "neg-demo-001"
+        return if (AppConfig.USE_MOCK_API || AppConfig.USE_MOCK_PHASE2) {
+            MockBackend.createQuote(
+                request = request,
+                catalogSnapshot = catalogSnapshot,
+                rules = rulesSnapshot ?: MockBackend.rulesConfig,
+                businessName = session.businessName ?: MockBackend.currentBusiness?.razonComercial ?: "LeadLaunch"
+            )
+        } else {
+            safeApiCall { api.createQuote(businessId, request) }
+                .also { if (it is ApiResult.Success) MockBackend.lastQuote = it.data }
+        }
+    }
+
+    suspend fun getQuotes(): ApiResult<QuoteListResponse> {
+        val businessId = sessionStore.getSession().businessId ?: "neg-demo-001"
+        return if (AppConfig.USE_MOCK_API || AppConfig.USE_MOCK_PHASE2) {
+            MockBackend.getQuotes()
+        } else {
+            safeApiCall { api.getQuotes(businessId) }
+        }
+    }
+
+    suspend fun updateQuoteStatus(quoteId: String, status: String): ApiResult<QuoteResponse> {
+        return if (AppConfig.USE_MOCK_API || AppConfig.USE_MOCK_PHASE2) {
+            MockBackend.updateQuoteStatus(quoteId, status)
+        } else {
+            safeApiCall { api.updateQuoteStatus(quoteId, QuoteStatusUpdateRequest(status)) }
+                .also { if (it is ApiResult.Success) MockBackend.lastQuote = it.data }
+        }
+    }
+
+    fun getLastQuote(): QuoteResponse? = MockBackend.lastQuote
+
+    fun setCurrentQuote(quote: QuoteResponse) {
+        MockBackend.lastQuote = quote
+    }
+}

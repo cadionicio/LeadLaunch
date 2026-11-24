@@ -31,7 +31,8 @@ fun HomeScreen(
     businessRepository: BusinessRepository,
     onOpenRadar: () -> Unit,
     onOpenRules: () -> Unit,
-    onOpenCatalog: () -> Unit
+    onOpenCatalog: () -> Unit,
+    onOpenAnalytics: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     var userName by remember { mutableStateOf("Emprendedor") }
@@ -69,7 +70,6 @@ fun HomeScreen(
         Spacer(Modifier.height(20.dp))
 
         if (loading) {
-            // Skeleton al cargar (CP2)
             repeat(2) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
                     Box(
@@ -103,7 +103,15 @@ fun HomeScreen(
                 CardKPI("Ventas ganadas", formatSoles(d.montoVentasGanadas), SuccessGreen, Modifier.weight(1f))
             }
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(10.dp))
+            TextButton(
+                onClick = onOpenAnalytics,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+            ) {
+                Text("Ver detalle de resultados y conversión →", color = PrimaryBlue, fontWeight = FontWeight.SemiBold)
+            }
+
+            Spacer(Modifier.height(10.dp))
             Text("Última recomendación adaptativa", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
 
@@ -139,14 +147,14 @@ fun HomeScreen(
                 OutlinedButton(
                     onClick = onOpenRules,
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.weight(1f).height(48.dp)
+                    modifier = Modifier.weight(1f).heightIn(min = 48.dp)
                 ) {
                     Text("Reglas de precios")
                 }
                 OutlinedButton(
                     onClick = onOpenCatalog,
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.weight(1f).height(48.dp)
+                    modifier = Modifier.weight(1f).heightIn(min = 48.dp)
                 ) {
                     Text("Ver catálogo")
                 }

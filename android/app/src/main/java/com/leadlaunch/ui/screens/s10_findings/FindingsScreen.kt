@@ -19,11 +19,13 @@ import com.leadlaunch.data.repository.RadarRepository
 import com.leadlaunch.ui.components.AppBar
 import com.leadlaunch.ui.components.EmptyState
 import com.leadlaunch.ui.components.FrictionChip
+import com.leadlaunch.ui.components.PrimaryButton
 import com.leadlaunch.ui.theme.*
 
 @Composable
 fun FindingsScreen(
     radarRepository: RadarRepository,
+    onCreateCampaign: () -> Unit,
     onBack: () -> Unit
 ) {
     val scan = radarRepository.getLastCachedScan()
@@ -39,7 +41,19 @@ fun FindingsScreen(
 
     Scaffold(
         containerColor = BackgroundLight,
-        topBar = { AppBar(title = "Hallazgos del Radar", onBack = onBack) }
+        topBar = { AppBar(title = "Hallazgos del Radar", onBack = onBack) },
+        bottomBar = {
+            if (scan != null && allFindings.isNotEmpty()) {
+                Surface(color = SurfaceWhite, shadowElevation = 8.dp) {
+                    Box(Modifier.fillMaxWidth().padding(16.dp)) {
+                        PrimaryButton(
+                            text = "Crear campaña IA con estos hallazgos",
+                            onClick = onCreateCampaign
+                        )
+                    }
+                }
+            }
+        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -53,7 +67,6 @@ fun FindingsScreen(
                     subtitle = "Vuelve al Radar y ejecuta un escaneo para ver hallazgos."
                 )
             } else {
-                // Decisión D12: aviso si es DATASET_FALLBACK
                 if (scan.fuenteDatos == "DATASET_FALLBACK") {
                     Surface(
                         color = WarningSoft,

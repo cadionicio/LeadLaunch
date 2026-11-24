@@ -2,6 +2,7 @@ package com.leadlaunch.data.remote
 
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -48,4 +49,28 @@ interface ApiService {
         @Path("id") businessId: String,
         @Body request: RadarScanRequest
     ): RadarScanResponse
+
+    // --- FASE 2 (CP3, CP4, CP5) ---
+    @POST("businesses/{id}/campaigns/generate")
+    suspend fun generateCampaign(
+        @Path("id") businessId: String,
+        @Body request: CampaignGenerateRequest
+    ): CampaignResponse
+
+    @POST("businesses/{id}/quotes")
+    suspend fun createQuote(
+        @Path("id") businessId: String,
+        @Body request: QuoteCreateRequest
+    ): QuoteResponse
+
+    @GET("businesses/{id}/quotes")
+    suspend fun getQuotes(
+        @Path("id") businessId: String
+    ): QuoteListResponse
+
+    @PATCH("quotes/{quote_id}/status")
+    suspend fun updateQuoteStatus(
+        @Path("quote_id") quoteId: String,
+        @Body request: QuoteStatusUpdateRequest
+    ): QuoteResponse
 }

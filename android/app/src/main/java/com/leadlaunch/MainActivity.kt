@@ -39,6 +39,8 @@ class MainActivity : ComponentActivity() {
                 val prodRepo = remember { ProductRepository(apiService, sessionStore) }
                 val rulesRepo = remember { RulesRepository(apiService, sessionStore) }
                 val radarRepo = remember { RadarRepository(apiService, sessionStore) }
+                val campaignRepo = remember { CampaignRepository(apiService, sessionStore) }
+                val quoteRepo = remember { QuoteRepository(apiService, sessionStore) }
 
                 LeadLaunchNavGraph(
                     navController = navController,
@@ -47,7 +49,9 @@ class MainActivity : ComponentActivity() {
                     businessRepository = bizRepo,
                     productRepository = prodRepo,
                     rulesRepository = rulesRepo,
-                    radarRepository = radarRepo
+                    radarRepository = radarRepo,
+                    campaignRepository = campaignRepo,
+                    quoteRepository = quoteRepo
                 )
             }
         }

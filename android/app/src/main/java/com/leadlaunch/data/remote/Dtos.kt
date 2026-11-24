@@ -118,7 +118,7 @@ data class PolicyPayloadDto(
 )
 
 data class RuleItemDto(
-    @SerializedName("tipo_regla") val tipoRegla: String, // RECARGO_EXPRESS, DESC_BIENVENIDA
+    @SerializedName("tipo_regla") val tipoRegla: String,
     @SerializedName("valor_porcentaje") val valorPorcentaje: Double,
     @SerializedName("monto_minimo") val montoMinimo: Double = 0.0,
     @SerializedName("cantidad_minima") val cantidadMinima: Int = 1,
@@ -160,11 +160,78 @@ data class FrictionSummaryDto(
 
 data class RadarScanResponse(
     @SerializedName("escaneo_id") val escaneoId: String,
-    @SerializedName("fuente_datos") val fuenteDatos: String, // OVERPASS_OSM, GOOGLE_PLACES, DATASET_FALLBACK
+    @SerializedName("fuente_datos") val fuenteDatos: String,
     @SerializedName("radio_busqueda_km") val radioBusquedaKm: Double,
     @SerializedName("total_analizados") val totalAnalizados: Int,
     @SerializedName("total_fricciones") val totalFricciones: Int,
     @SerializedName("ejecutado_en") val ejecutadoEn: String? = null,
     val competidores: List<CompetitorDto>,
     @SerializedName("resumen_fricciones") val resumenFricciones: List<FrictionSummaryDto> = emptyList()
+)
+
+// --- FASE 2: Campañas IA (#9 - CP3) ---
+data class CampaignGenerateRequest(
+    @SerializedName("escaneo_id") val escaneoId: String? = null,
+    val fricciones: List<String> = emptyList(),
+    val objetivo: String = "Atraer más pedidos",
+    val canal: String = "Redes sociales (Instagram, Facebook, TikTok)",
+    val tono: String = "Cercano y confiable"
+)
+
+data class CampaignResponse(
+    @SerializedName("campana_id") val campanaId: String,
+    @SerializedName("alerta_adaptativa") val alertaAdaptativa: String,
+    @SerializedName("post_redes") val postRedes: String,
+    @SerializedName("guion_reel_15s") val guionReel15s: String,
+    val estado: String = "BORRADOR",
+    @SerializedName("creado_en") val creadoEn: String? = null
+)
+
+// --- FASE 2: Cotizaciones y WhatsApp (#10, #11 - CP4 y CP5) ---
+data class QuoteItemRequest(
+    @SerializedName("producto_id") val productoId: String,
+    val cantidad: Int
+)
+
+data class QuoteCreateRequest(
+    @SerializedName("nombre_prospecto") val nombreProspecto: String,
+    @SerializedName("telefono_prospecto") val telefonoProspecto: String? = null,
+    @SerializedName("es_entrega_express") val esEntregaExpress: Boolean = false,
+    @SerializedName("es_cliente_nuevo") val esClienteNuevo: Boolean = true,
+    val items: List<QuoteItemRequest>
+)
+
+data class QuoteDetailDto(
+    @SerializedName("producto_id") val productoId: String,
+    @SerializedName("nombre_producto") val nombreProducto: String,
+    val cantidad: Int,
+    @SerializedName("precio_unitario_snap") val precioUnitarioSnap: Double,
+    @SerializedName("importe_linea") val importeLinea: Double
+)
+
+data class QuoteResponse(
+    @SerializedName("cotizacion_id") val cotizacionId: String,
+    val codigo: String? = null,
+    @SerializedName("nombre_prospecto") val nombreProspecto: String,
+    @SerializedName("telefono_prospecto") val telefonoProspecto: String? = null,
+    @SerializedName("es_entrega_express") val esEntregaExpress: Boolean = false,
+    @SerializedName("es_cliente_nuevo") val esClienteNuevo: Boolean = true,
+    val subtotal: Double,
+    @SerializedName("monto_recargo") val montoRecargo: Double = 0.0,
+    @SerializedName("monto_descuento") val montoDescuento: Double = 0.0,
+    @SerializedName("total_neto") val totalNeto: Double,
+    @SerializedName("mensaje_whatsapp") val mensajeWhatsapp: String,
+    @SerializedName("whatsapp_url") val whatsappUrl: String? = null,
+    val estado: String = "EMITIDA",
+    @SerializedName("creado_en") val creadoEn: String? = null,
+    val detalles: List<QuoteDetailDto> = emptyList()
+)
+
+data class QuoteListResponse(
+    val items: List<QuoteResponse>,
+    val total: Int = items.size
+)
+
+data class QuoteStatusUpdateRequest(
+    val estado: String // ENVIADA_WA, GANADA, PERDIDA
 )
