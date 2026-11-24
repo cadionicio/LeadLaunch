@@ -18,38 +18,43 @@
 ## 2. Tareas por checkpoint
 
 ### CP0 · Arranque — Lunes 23/11 · 23:30
-- [ ] Crear repo `leadlaunch`, ramas `develop`, `cesar/backend`, `giancarlos/android`, `ernesto/db-qa`.
-- [ ] Invitar colaboradores, default branch = `develop`, proteger `main` y `develop`.
-- [ ] Subir a `develop` la estructura de carpetas, `README.md`, `.gitignore` (Python + Android) y los 4 planes en `docs/planificacion/`.
-- [ ] Copiar los 2 Markdown fuente a `docs/especificaciones/`.
-- [ ] Crear esqueleto FastAPI: `app/main.py`, `core/config.py` (lee `.env`), `GET /health`.
-- [ ] `requirements.txt`: `fastapi`, `uvicorn[standard]`, `pydantic-settings`, `psycopg[binary]` o `sqlalchemy`, `passlib[bcrypt]` o `argon2-cffi`, `python-jose` o `pyjwt`, `httpx`.
-- [ ] `.env.example`: `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRA_MIN`, `GEMINI_API_KEY`, `OVERPASS_URL`.
-- [ ] Manejador global de errores con el formato `{error:{codigo, mensaje, campos}}`.
-- [ ] Recibir de Ernesto el `DATABASE_URL` de Neon y probar conexión.
+- [x] Crear repo `leadlaunch`, ramas `develop`, `cesar/backend`, `giancarlos/android`, `ernesto/db-qa`.
+- [x] Invitar colaboradores, default branch = `develop`, proteger `main` y `develop`.
+- [x] Subir a `develop` la estructura de carpetas, `README.md`, `.gitignore` (Python + Android) y los 4 planes en `docs/planificacion/`.
+- [x] Copiar los 2 Markdown fuente a `docs/especificaciones/`.
+- [x] Crear esqueleto FastAPI: `app/main.py`, `core/config.py` (lee `.env`), `GET /health`.
+- [x] `requirements.txt`: `fastapi`, `uvicorn[standard]`, `pydantic-settings`, `psycopg[binary]` o `sqlalchemy`, `passlib[bcrypt]` o `argon2-cffi`, `python-jose` o `pyjwt`, `httpx`.
+- [x] `.env.example`: `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRA_MIN`, `GEMINI_API_KEY`, `OVERPASS_URL`.
+- [x] Manejador global de errores con el formato `{error:{codigo, mensaje, campos}}`.
+- [x] Base en Neon creada con el DDL oficial y verificada al 100 % (`scripts/aplicar_ddl.py`, `scripts/verificar_bd.py`).
 
 ### CP1 · Cuenta y negocio — Martes 24/11 · 13:00
-- [ ] `AuthService` + router: `POST /auth/register` (201, correo único, hash bcrypt/Argon2) y `POST /auth/login` (200/401).
-- [ ] Respuesta de auth incluye `negocio_id` o `null` (decisión D2).
-- [ ] Dependencia `get_current_user` (valida JWT) y verificación de propiedad: si el `{id}` no es del usuario → **404**.
-- [ ] `BusinessService`: `POST /businesses` en **una transacción**: negocio + `cat_politicas_negocio` por defecto + reglas base (`RECARGO_EXPRESS` 15 %, `DESC_BIENVENIDA` 10 %, ambas activas).
-- [ ] Validaciones Pydantic: WhatsApp `^[0-9]{10,15}$`, radio 0.50–25.00, lat/lon en rango, descripción obligatoria.
-- [ ] Desplegar en Render/Koyeb y pasar la URL a Giancarlos y Ernesto.
-- [ ] Publicar `CONTRATOS_API.md` con lo ya implementado.
-- [ ] PR `cesar/backend` → `develop`.
+- [x] `AuthService` + router: `POST /auth/register` (201, correo único, hash bcrypt/Argon2) y `POST /auth/login` (200/401).
+- [x] Respuesta de auth incluye `negocio_id` o `null` (decisión D2).
+- [x] Dependencia `get_current_user` (valida JWT) y verificación de propiedad: si el `{id}` no es del usuario → **404**.
+- [x] `BusinessService`: `POST /businesses` en **una transacción**: negocio + `cat_politicas_negocio` por defecto + reglas base (`RECARGO_EXPRESS` 15 %, `DESC_BIENVENIDA` 10 %, ambas activas).
+- [x] Validaciones Pydantic: WhatsApp `^[0-9]{10,15}$`, radio 0.50–25.00, lat/lon en rango, descripción obligatoria.
+- [x] Desplegar en Render/Koyeb y pasar la URL a Giancarlos y Ernesto.
+- [x] Publicar `CONTRATOS_API.md` con lo ya implementado.
+- [x] PR `cesar/backend` → `develop`.
+
+### Asumido de `database/` (antes de Ernesto)
+- [x] `database/01_ddl.sql` y `02_seed.sql` (copia fiel del §4.3, verificados al 100 %).
+- [x] `database/fallback/radar_dataset.json`: 9 competidores ficticios, 37 reseñas, cubre los 5 tipos de fricción.
+- [x] `scripts/cargar_demo.py`: cuenta Ana + Dulce Punto + 4 productos de la maqueta.
 
 ### CP2 · Catálogo, reglas, dashboard, radar — Martes 24/11 · 21:00
-- [ ] `CatalogService`: `POST /businesses/{id}/products` (precio > 0, horas ≥ 1, stock ≥ 0, SKU único → 422 `SKU_DUPLICADO`).
-- [ ] `GET /businesses/{id}/products` paginado, solo activos.
-- [ ] `PolicyService`: `GET` y `PUT /businesses/{id}/rules` (porcentajes 0–100).
-- [ ] `GET /businesses/{id}/dashboard` leyendo `mv_resumen_comercial_negocio`.
-- [ ] Refrescar la vista con `REFRESH MATERIALIZED VIEW CONCURRENTLY` tras crear producto y tras escanear (D11).
-- [ ] `RadarService` — `POST /businesses/{id}/radar/scan`:
-  - [ ] Intentar Overpass API con `(lat, lon, radio_km)` y rubro.
-  - [ ] Si falla, no hay reseñas o se agota la cuota → leer `database/fallback/radar_dataset.json` y marcar `fuente_datos = DATASET_FALLBACK`.
-  - [ ] Filtrar reseñas con calificación ≤ 3 y texto no vacío (código puro, sin IA).
-  - [ ] Clasificar cada reseña en `cat_tipos_friccion` (por palabras clave: "demora", "tarde", "caro", "envío", "dañado", "atención", "urgente"...).
-  - [ ] Persistir escaneo, competidores (upsert por `fuente_externa_id`) y hallazgos en una transacción. Responder 201 con el formato del §7.
+- [x] `CatalogService`: `POST /businesses/{id}/products` (precio > 0, horas ≥ 1, stock ≥ 0, SKU único → 422 `SKU_DUPLICADO`).
+- [x] `GET /businesses/{id}/products` paginado, solo activos.
+- [x] `PolicyService`: `GET` y `PUT /businesses/{id}/rules` (porcentajes 0–100).
+- [x] `GET /businesses/{id}/dashboard` leyendo `mv_resumen_comercial_negocio`.
+- [x] Refrescar la vista con `REFRESH MATERIALIZED VIEW CONCURRENTLY` tras crear producto y tras escanear (D11).
+- [x] `RadarService` — `POST /businesses/{id}/radar/scan`:
+  - [ ] ~~Intentar Overpass API~~ → reemplazado por la decisión D14 (Overpass no da reseñas; fuente real en Fase 2).
+  - [x] Leer `database/fallback/radar_dataset.json` y marcar `fuente_datos = DATASET_FALLBACK`.
+  - [x] Filtrar reseñas con calificación ≤ 3 y texto no vacío (código puro, sin IA).
+  - [x] Clasificar cada reseña en `cat_tipos_friccion` (por palabras clave: "demora", "tarde", "caro", "envío", "dañado", "atención", "urgente"...).
+  - [x] Persistir escaneo, competidores (upsert por `fuente_externa_id`) y hallazgos en una transacción. Responder 201 con el formato del §7.
 - [ ] PR → `develop`. Revisar PRs de Giancarlos y Ernesto. Merge `develop` → `main`, tag `v0.5.0`:
   ```bash
   git checkout main && git pull
@@ -73,5 +78,5 @@
 - Render gratis duerme: el primer request puede tardar; no es un bug.
 
 ## 4. Dependencias
-- **Necesito de Ernesto:** `DATABASE_URL` de Neon (CP0) y `radar_dataset.json` (antes de CP2).
+- **Necesito de Ernesto:** ejecución de las pruebas CP-01 a CP-10 con evidencias.
 - **Giancarlos necesita de mí:** URL del backend desplegado (CP1) y contrato actualizado.

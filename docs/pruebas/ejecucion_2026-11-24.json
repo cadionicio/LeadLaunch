@@ -1,0 +1,598 @@
+{
+  "ejecutado_en": "2026-11-24T08:54:40.722Z",
+  "negocio_qa": "c9798760-7997-47fa-8369-e0b06b3f4035",
+  "base_url": "https://leadlaunch-api.onrender.com",
+  "log": [
+    {
+      "cp": "CP-01",
+      "desc": "Registro de cuenta nueva",
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "auth": "sin token",
+      "request": {
+        "nombre_completo": "QA LeadLaunch",
+        "correo": "qa_2611240854@correo-prueba.com",
+        "password": "QaPrueba123"
+      },
+      "status": 201,
+      "ms": 2482,
+      "response": {
+        "access_token": "<JWT omitido>",
+        "token_type": "bearer",
+        "usuario": {
+          "usuario_id": "29dd58a8-eff3-47db-a331-5898bf7d2a9d",
+          "nombre_completo": "QA LeadLaunch",
+          "correo": "qa_2611240854@correo-prueba.com"
+        },
+        "negocio_id": null
+      },
+      "at": "2026-11-24T08:54:40.722Z"
+    },
+    {
+      "cp": "CP-01",
+      "desc": "Login con la cuenta creada",
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "auth": "sin token",
+      "request": {
+        "correo": "qa_2611240854@correo-prueba.com",
+        "password": "QaPrueba123"
+      },
+      "status": 200,
+      "ms": 2502,
+      "response": {
+        "access_token": "<JWT omitido>",
+        "token_type": "bearer",
+        "usuario": {
+          "usuario_id": "29dd58a8-eff3-47db-a331-5898bf7d2a9d",
+          "nombre_completo": "QA LeadLaunch",
+          "correo": "qa_2611240854@correo-prueba.com"
+        },
+        "negocio_id": null
+      },
+      "at": "2026-11-24T08:54:43.224Z"
+    },
+    {
+      "cp": "CP-02",
+      "desc": "Alta de negocio (prerrequisito)",
+      "method": "POST",
+      "path": "/api/v1/businesses",
+      "auth": "Bearer <token>",
+      "request": {
+        "rubro_id": 1,
+        "razon_comercial": "QA Repostería",
+        "descripcion": "Negocio creado por la matriz de pruebas QA.",
+        "whatsapp_numero": "51900000001",
+        "distrito": "Miraflores",
+        "latitud": -12.1211,
+        "longitud": -77.0297,
+        "radio_cobertura_km": 3
+      },
+      "status": 201,
+      "ms": 2641,
+      "response": {
+        "negocio_id": "c9798760-7997-47fa-8369-e0b06b3f4035",
+        "usuario_id": "29dd58a8-eff3-47db-a331-5898bf7d2a9d",
+        "rubro_id": 1,
+        "rubro_nombre": "Repostería y Pastelería Artesanal",
+        "razon_comercial": "QA Repostería",
+        "descripcion": "Negocio creado por la matriz de pruebas QA.",
+        "whatsapp_numero": "51900000001",
+        "distrito": "Miraflores",
+        "latitud": -12.1211,
+        "longitud": -77.0297,
+        "radio_cobertura_km": 3,
+        "activo": true,
+        "creado_en": "2026-11-24T08:54:44.401934Z"
+      },
+      "at": "2026-11-24T08:54:45.866Z"
+    },
+    {
+      "cp": "CP-02",
+      "desc": "Alta de producto gastronómico",
+      "method": "POST",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": {
+        "sku": "TT-015",
+        "nombre": "Torta Temática 15 porciones",
+        "precio_base": 95,
+        "tiempo_prep_horas": 24,
+        "stock_disponible": 5,
+        "permite_express": true
+      },
+      "status": 201,
+      "ms": 1577,
+      "response": {
+        "producto_id": "8fe87066-2f60-4740-a80d-e681e2290e5c",
+        "sku": "TT-015",
+        "nombre": "Torta Temática 15 porciones",
+        "descripcion": null,
+        "precio_base": 95,
+        "tiempo_prep_horas": 24,
+        "stock_disponible": 5,
+        "permite_express": true,
+        "activo": true,
+        "creado_en": "2026-11-24T08:54:46.721838Z"
+      },
+      "at": "2026-11-24T08:54:47.445Z"
+    },
+    {
+      "cp": "CP-02",
+      "desc": "Producto listado en el catálogo",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": null,
+      "status": 200,
+      "ms": 1086,
+      "response": {
+        "items": [
+          {
+            "producto_id": "8fe87066-2f60-4740-a80d-e681e2290e5c",
+            "sku": "TT-015",
+            "nombre": "Torta Temática 15 porciones",
+            "descripcion": null,
+            "precio_base": 95,
+            "tiempo_prep_horas": 24,
+            "stock_disponible": 5,
+            "permite_express": true,
+            "activo": true,
+            "creado_en": "2026-11-24T08:54:46.721838Z"
+          }
+        ],
+        "page": 1,
+        "size": 20,
+        "total": 1
+      },
+      "at": "2026-11-24T08:54:48.534Z"
+    },
+    {
+      "cp": "CP-03",
+      "desc": "Escaneo de radar (3 km, REPOSTERIA)",
+      "method": "POST",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/radar/scan",
+      "auth": "Bearer <token>",
+      "request": {
+        "radio_km": 3
+      },
+      "status": 201,
+      "ms": 7409,
+      "response": {
+        "escaneo_id": "a6aeb5ad-cfbe-4e76-a130-5bc46ae2ee52",
+        "fuente_datos": "DATASET_FALLBACK",
+        "es_demo": true,
+        "aviso": "Datos de referencia (demo): negocios y reseñas ficticios, no son opiniones reales.",
+        "radio_busqueda_km": 3,
+        "total_competidores": 4,
+        "total_analizados": 21,
+        "total_fricciones": 13,
+        "nuevas_fricciones": 13,
+        "ejecutado_en": "2026-11-24T08:54:49.411398Z",
+        "competidores": [
+          {
+            "nombre": "La Dulcería (demo)",
+            "distancia_km": 1.25,
+            "calificacion_prom": 2.8,
+            "fricciones": [
+              "DEMORA_ENTREGA (2★)",
+              "DEMORA_ENTREGA (1★)",
+              "CALIDAD_PRESENTACION (3★)",
+              "MALA_ATENCION (2★)"
+            ]
+          },
+          {
+            "nombre": "Postres & Más (demo)",
+            "distancia_km": 1.61,
+            "calificacion_prom": 3.1,
+            "fricciones": [
+              "PRECIO_DELIVERY (2★)",
+              "PRECIO_DELIVERY (3★)",
+              "SIN_OPCIONES_URGENTES (1★)",
+              "DEMORA_ENTREGA (2★)"
+            ]
+          },
+          {
+            "nombre": "Sweet House (demo)",
+            "distancia_km": 2.33,
+            "calificacion_prom": 2.9,
+            "fricciones": [
+              "MALA_ATENCION (1★)",
+              "CALIDAD_PRESENTACION (2★)",
+              "DEMORA_ENTREGA (3★)",
+              "SIN_OPCIONES_URGENTES (2★)"
+            ]
+          },
+          {
+            "nombre": "Horno Dulce Barranco (demo)",
+            "distancia_km": 2.75,
+            "calificacion_prom": 4.2,
+            "fricciones": [
+              "SIN_OPCIONES_URGENTES (3★)"
+            ]
+          }
+        ],
+        "resumen_fricciones": [
+          {
+            "tipo_codigo": "DEMORA_ENTREGA",
+            "tipo_nombre": "Demora en delivery/entrega",
+            "cantidad": 4
+          },
+          {
+            "tipo_codigo": "SIN_OPCIONES_URGENTES",
+            "tipo_nombre": "Sin atención de último minuto",
+            "cantidad": 3
+          },
+          {
+            "tipo_codigo": "CALIDAD_PRESENTACION",
+            "tipo_nombre": "Presentación o frescura",
+            "cantidad": 2
+          },
+          {
+            "tipo_codigo": "MALA_ATENCION",
+            "tipo_nombre": "Mala atención al cliente",
+            "cantidad": 2
+          },
+          {
+            "tipo_codigo": "PRECIO_DELIVERY",
+            "tipo_nombre": "Precio o envío elevado",
+            "cantidad": 2
+          }
+        ]
+      },
+      "at": "2026-11-24T08:54:55.944Z"
+    },
+    {
+      "cp": "CP-03",
+      "desc": "Dashboard tras el escaneo (total_escaneos +1)",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/dashboard",
+      "auth": "Bearer <token>",
+      "request": null,
+      "status": 200,
+      "ms": 900,
+      "response": {
+        "negocio_id": "c9798760-7997-47fa-8369-e0b06b3f4035",
+        "razon_comercial": "QA Repostería",
+        "rubro_nombre": "Repostería y Pastelería Artesanal",
+        "distrito": "Miraflores",
+        "total_escaneos": 1,
+        "total_cotizaciones": 0,
+        "total_ventas_ganadas": 0,
+        "monto_ventas_ganadas": 0,
+        "tasa_conversion_pct": 0,
+        "productos_activos": 1,
+        "fricciones_detectadas": 13,
+        "ultima_alerta_adaptativa": null
+      },
+      "at": "2026-11-24T08:54:56.844Z"
+    },
+    {
+      "cp": "CP-06",
+      "desc": "Catálogo sin header Authorization",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "sin token",
+      "request": null,
+      "status": 401,
+      "ms": 230,
+      "response": {
+        "error": {
+          "codigo": "NO_AUTENTICADO",
+          "mensaje": "Falta el token de acceso (Authorization: Bearer ...).",
+          "campos": []
+        }
+      },
+      "at": "2026-11-24T08:54:57.075Z"
+    },
+    {
+      "cp": "CP-07",
+      "desc": "Producto con precio_base negativo",
+      "method": "POST",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": {
+        "sku": "NEG-001",
+        "nombre": "Precio inválido",
+        "precio_base": -20
+      },
+      "status": 422,
+      "ms": 205,
+      "response": {
+        "error": {
+          "codigo": "VALIDACION",
+          "mensaje": "Hay campos inválidos o incompletos.",
+          "campos": [
+            "precio_base"
+          ]
+        }
+      },
+      "at": "2026-11-24T08:54:57.280Z"
+    },
+    {
+      "cp": "CP-07",
+      "desc": "Negocio con whatsapp_numero = \"abc\"",
+      "method": "POST",
+      "path": "/api/v1/businesses",
+      "auth": "Bearer <token>",
+      "request": {
+        "rubro_id": 1,
+        "razon_comercial": "QA Repostería",
+        "descripcion": "Negocio creado por la matriz de pruebas QA.",
+        "whatsapp_numero": "abc",
+        "distrito": "Miraflores",
+        "latitud": -12.1211,
+        "longitud": -77.0297,
+        "radio_cobertura_km": 3
+      },
+      "status": 422,
+      "ms": 193,
+      "response": {
+        "error": {
+          "codigo": "VALIDACION",
+          "mensaje": "Hay campos inválidos o incompletos.",
+          "campos": [
+            "whatsapp_numero"
+          ]
+        }
+      },
+      "at": "2026-11-24T08:54:57.473Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "Payload con DROP TABLE (bloqueado por el firewall de Render antes de llegar a la API)",
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "auth": "sin token",
+      "request": {
+        "nombre_completo": "'; DROP TABLE negocios; --",
+        "correo": "qa_sql_2611240854@correo-prueba.com",
+        "password": "QaPrueba123"
+      },
+      "status": 403,
+      "ms": 134,
+      "response": "[Página HTML \"Blocked\" del firewall de Render]",
+      "at": "2026-11-24T08:54:57.657Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "La tabla negocios sigue intacta (dashboard responde)",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/dashboard",
+      "auth": "Bearer <token>",
+      "request": null,
+      "status": 200,
+      "ms": 1034,
+      "response": {
+        "negocio_id": "c9798760-7997-47fa-8369-e0b06b3f4035",
+        "razon_comercial": "QA Repostería",
+        "rubro_nombre": "Repostería y Pastelería Artesanal",
+        "distrito": "Miraflores",
+        "total_escaneos": 1,
+        "total_cotizaciones": 0,
+        "total_ventas_ganadas": 0,
+        "monto_ventas_ganadas": 0,
+        "tasa_conversion_pct": 0,
+        "productos_activos": 1,
+        "fricciones_detectadas": 13,
+        "ultima_alerta_adaptativa": null
+      },
+      "at": "2026-11-24T08:54:58.692Z"
+    },
+    {
+      "cp": "CP-10",
+      "desc": "Registro de un segundo emprendedor",
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "auth": "sin token",
+      "request": {
+        "nombre_completo": "QA Otro Emprendedor",
+        "correo": "qa_b_2611240854@correo-prueba.com",
+        "password": "QaPrueba123"
+      },
+      "status": 201,
+      "ms": 2458,
+      "response": {
+        "access_token": "<JWT omitido>",
+        "token_type": "bearer",
+        "usuario": {
+          "usuario_id": "083d72e5-ba8a-405f-81cf-870466665cf3",
+          "nombre_completo": "QA Otro Emprendedor",
+          "correo": "qa_b_2611240854@correo-prueba.com"
+        },
+        "negocio_id": null
+      },
+      "at": "2026-11-24T08:55:01.150Z"
+    },
+    {
+      "cp": "CP-10",
+      "desc": "Acceso al catálogo de otro negocio con token ajeno",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": null,
+      "status": 404,
+      "ms": 865,
+      "response": {
+        "error": {
+          "codigo": "NEGOCIO_NO_ENCONTRADO",
+          "mensaje": "No encontramos este negocio.",
+          "campos": []
+        }
+      },
+      "at": "2026-11-24T08:55:02.016Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "Inyección SQL en nombre de producto (variante 1)",
+      "method": "POST",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": {
+        "sku": "SQL-001",
+        "nombre": "Torta'); DELETE FROM productos; --",
+        "precio_base": 10
+      },
+      "status": 201,
+      "ms": 1597,
+      "response": {
+        "producto_id": "5509b22d-c18c-453f-a8b0-e444eb053135",
+        "sku": "SQL-001",
+        "nombre": "Torta'); DELETE FROM productos; --",
+        "descripcion": null,
+        "precio_base": 10,
+        "tiempo_prep_horas": 24,
+        "stock_disponible": 0,
+        "permite_express": true,
+        "activo": true,
+        "creado_en": "2026-11-24T08:55:21.193199Z"
+      },
+      "at": "2026-11-24T08:55:21.923Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "Inyección SQL en nombre de producto (variante 2)",
+      "method": "POST",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": {
+        "sku": "SQL-002",
+        "nombre": "x' OR '1'='1",
+        "precio_base": 10
+      },
+      "status": 201,
+      "ms": 1762,
+      "response": {
+        "producto_id": "bcfb52cf-a761-4c74-a8d6-28a5d5a2436b",
+        "sku": "SQL-002",
+        "nombre": "x' OR '1'='1",
+        "descripcion": null,
+        "precio_base": 10,
+        "tiempo_prep_horas": 24,
+        "stock_disponible": 0,
+        "permite_express": true,
+        "activo": true,
+        "creado_en": "2026-11-24T08:55:22.782358Z"
+      },
+      "at": "2026-11-24T08:55:23.685Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "Inyección SQL en nombre de producto (variante 3)",
+      "method": "POST",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products",
+      "auth": "Bearer <token>",
+      "request": {
+        "sku": "SQL-003",
+        "nombre": "Robert'); UPDATE negocios SET activo=false; --",
+        "precio_base": 10
+      },
+      "status": 201,
+      "ms": 1587,
+      "response": {
+        "producto_id": "ff7b628b-01de-442c-a818-8d65e0973088",
+        "sku": "SQL-003",
+        "nombre": "Robert'); UPDATE negocios SET activo=false; --",
+        "descripcion": null,
+        "precio_base": 10,
+        "tiempo_prep_horas": 24,
+        "stock_disponible": 0,
+        "permite_express": true,
+        "activo": true,
+        "creado_en": "2026-11-24T08:55:24.546158Z"
+      },
+      "at": "2026-11-24T08:55:25.274Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "Catálogo después de las inyecciones: textos guardados literalmente y tablas intactas",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/products?size=100",
+      "auth": "Bearer <token>",
+      "request": null,
+      "status": 200,
+      "ms": 1077,
+      "response": {
+        "items": [
+          {
+            "producto_id": "ff7b628b-01de-442c-a818-8d65e0973088",
+            "sku": "SQL-003",
+            "nombre": "Robert'); UPDATE negocios SET activo=false; --",
+            "descripcion": null,
+            "precio_base": 10,
+            "tiempo_prep_horas": 24,
+            "stock_disponible": 0,
+            "permite_express": true,
+            "activo": true,
+            "creado_en": "2026-11-24T08:55:24.546158Z"
+          },
+          {
+            "producto_id": "8fe87066-2f60-4740-a80d-e681e2290e5c",
+            "sku": "TT-015",
+            "nombre": "Torta Temática 15 porciones",
+            "descripcion": null,
+            "precio_base": 95,
+            "tiempo_prep_horas": 24,
+            "stock_disponible": 5,
+            "permite_express": true,
+            "activo": true,
+            "creado_en": "2026-11-24T08:54:46.721838Z"
+          },
+          {
+            "producto_id": "5509b22d-c18c-453f-a8b0-e444eb053135",
+            "sku": "SQL-001",
+            "nombre": "Torta'); DELETE FROM productos; --",
+            "descripcion": null,
+            "precio_base": 10,
+            "tiempo_prep_horas": 24,
+            "stock_disponible": 0,
+            "permite_express": true,
+            "activo": true,
+            "creado_en": "2026-11-24T08:55:21.193199Z"
+          },
+          {
+            "producto_id": "bcfb52cf-a761-4c74-a8d6-28a5d5a2436b",
+            "sku": "SQL-002",
+            "nombre": "x' OR '1'='1",
+            "descripcion": null,
+            "precio_base": 10,
+            "tiempo_prep_horas": 24,
+            "stock_disponible": 0,
+            "permite_express": true,
+            "activo": true,
+            "creado_en": "2026-11-24T08:55:22.782358Z"
+          }
+        ],
+        "page": 1,
+        "size": 100,
+        "total": 4
+      },
+      "at": "2026-11-24T08:55:26.367Z"
+    },
+    {
+      "cp": "CP-08",
+      "desc": "Dashboard responde (negocio sigue activo)",
+      "method": "GET",
+      "path": "/api/v1/businesses/c9798760-7997-47fa-8369-e0b06b3f4035/dashboard",
+      "auth": "Bearer <token>",
+      "request": null,
+      "status": 200,
+      "ms": 885,
+      "response": {
+        "negocio_id": "c9798760-7997-47fa-8369-e0b06b3f4035",
+        "razon_comercial": "QA Repostería",
+        "rubro_nombre": "Repostería y Pastelería Artesanal",
+        "distrito": "Miraflores",
+        "total_escaneos": 1,
+        "total_cotizaciones": 0,
+        "total_ventas_ganadas": 0,
+        "monto_ventas_ganadas": 0,
+        "tasa_conversion_pct": 0,
+        "productos_activos": 4,
+        "fricciones_detectadas": 13,
+        "ultima_alerta_adaptativa": null
+      },
+      "at": "2026-11-24T08:55:27.255Z"
+    }
+  ]
+}

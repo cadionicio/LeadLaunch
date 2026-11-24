@@ -1,0 +1,1253 @@
+{
+ "extensiones": [
+  "pgcrypto"
+ ],
+ "tablas": {
+  "bitacora_auditoria": {
+   "columnas": {
+    "accion": [
+     "character varying",
+     20,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "auditoria_id": [
+     "bigint",
+     null,
+     64,
+     0,
+     "NO",
+     "nextval('bitacora_auditoria_auditoria_id_seq'::regclass)"
+    ],
+    "detalle_json": [
+     "jsonb",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "entidad_afectada": [
+     "character varying",
+     50,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "registrado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "registro_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "usuario_actor": [
+     "uuid",
+     null,
+     null,
+     null,
+     "YES",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((accion)::text = ANY ((ARRAY['INSERT'::character varying, 'UPDATE'::character varying, 'DELETE'::character varying])::text[])))",
+    "PRIMARY KEY (auditoria_id)"
+   ],
+   "opciones": [
+    "fillfactor=100"
+   ]
+  },
+  "campanas_adaptativas": {
+   "columnas": {
+    "alerta_adaptativa": [
+     "text",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "campana_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "creado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "escaneo_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "YES",
+     ""
+    ],
+    "estado": [
+     "character varying",
+     20,
+     null,
+     null,
+     "NO",
+     "'BORRADOR'::character varying"
+    ],
+    "guion_reel_15s": [
+     "text",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "post_redes": [
+     "text",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((estado)::text = ANY ((ARRAY['BORRADOR'::character varying, 'PUBLICADA'::character varying, 'ARCHIVADA'::character varying])::text[])))",
+    "FOREIGN KEY (escaneo_id) REFERENCES eventos_escaneo_radar(escaneo_id) ON DELETE RESTRICT",
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (campana_id)"
+   ],
+   "opciones": []
+  },
+  "cat_politicas_negocio": {
+   "columnas": {
+    "acepta_yape_plin": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "actualizado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "horario_atencion": [
+     "character varying",
+     100,
+     null,
+     null,
+     "NO",
+     "'09:00 - 20:00'::character varying"
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "permite_acumular_desc": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "false"
+    ],
+    "permite_express": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "politica_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ]
+   },
+   "restricciones": [
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (politica_id)",
+    "UNIQUE (negocio_id)"
+   ],
+   "opciones": []
+  },
+  "cat_reglas_negocio": {
+   "columnas": {
+    "activa": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "cantidad_minima": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "1"
+    ],
+    "descripcion": [
+     "character varying",
+     150,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "monto_minimo": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     "0.00"
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "regla_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "tipo_regla": [
+     "character varying",
+     30,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "valor_porcentaje": [
+     "numeric",
+     null,
+     5,
+     2,
+     "NO",
+     ""
+    ],
+    "vigente_desde": [
+     "date",
+     null,
+     null,
+     null,
+     "NO",
+     "CURRENT_DATE"
+    ],
+    "vigente_hasta": [
+     "date",
+     null,
+     null,
+     null,
+     "YES",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((tipo_regla)::text = ANY ((ARRAY['RECARGO_EXPRESS'::character varying, 'DESC_BIENVENIDA'::character varying, 'DESC_VOLUMEN'::character varying])::text[])))",
+    "CHECK (((valor_porcentaje >= 0.00) AND (valor_porcentaje <= 100.00)))",
+    "CHECK (((vigente_hasta IS NULL) OR (vigente_hasta >= vigente_desde)))",
+    "CHECK ((cantidad_minima >= 1))",
+    "CHECK ((monto_minimo >= (0)::numeric))",
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (regla_id)"
+   ],
+   "opciones": []
+  },
+  "cat_rubros": {
+   "columnas": {
+    "activo": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "codigo": [
+     "character varying",
+     30,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "nombre": [
+     "character varying",
+     80,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "rubro_id": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     "nextval('cat_rubros_rubro_id_seq'::regclass)"
+    ],
+    "sector": [
+     "character varying",
+     40,
+     null,
+     null,
+     "NO",
+     "'GASTRONOMIA'::character varying"
+    ]
+   },
+   "restricciones": [
+    "PRIMARY KEY (rubro_id)",
+    "UNIQUE (codigo)"
+   ],
+   "opciones": []
+  },
+  "cat_tipos_friccion": {
+   "columnas": {
+    "codigo": [
+     "character varying",
+     30,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "descripcion": [
+     "character varying",
+     200,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "nombre": [
+     "character varying",
+     80,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "tipo_friccion_id": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     "nextval('cat_tipos_friccion_tipo_friccion_id_seq'::regclass)"
+    ]
+   },
+   "restricciones": [
+    "PRIMARY KEY (tipo_friccion_id)",
+    "UNIQUE (codigo)"
+   ],
+   "opciones": []
+  },
+  "competidores_locales": {
+   "columnas": {
+    "actualizado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "calificacion_prom": [
+     "numeric",
+     null,
+     2,
+     1,
+     "YES",
+     ""
+    ],
+    "competidor_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "distrito": [
+     "character varying",
+     80,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "fuente_externa_id": [
+     "character varying",
+     100,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "latitud": [
+     "numeric",
+     null,
+     9,
+     6,
+     "NO",
+     ""
+    ],
+    "longitud": [
+     "numeric",
+     null,
+     9,
+     6,
+     "NO",
+     ""
+    ],
+    "nombre": [
+     "character varying",
+     150,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "rubro_id": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((calificacion_prom >= 1.0) AND (calificacion_prom <= 5.0)))",
+    "FOREIGN KEY (rubro_id) REFERENCES cat_rubros(rubro_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (competidor_id)",
+    "UNIQUE (fuente_externa_id)"
+   ],
+   "opciones": []
+  },
+  "cotizacion_detalles": {
+   "columnas": {
+    "cantidad": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     ""
+    ],
+    "cotizacion_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "detalle_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "importe_linea": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     ""
+    ],
+    "precio_unitario_snap": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     ""
+    ],
+    "producto_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK ((cantidad > 0))",
+    "CHECK ((importe_linea = ((cantidad)::numeric * precio_unitario_snap)))",
+    "CHECK ((precio_unitario_snap > (0)::numeric))",
+    "FOREIGN KEY (cotizacion_id) REFERENCES cotizaciones_cierre(cotizacion_id) ON DELETE RESTRICT",
+    "FOREIGN KEY (producto_id) REFERENCES productos(producto_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (detalle_id)"
+   ],
+   "opciones": []
+  },
+  "cotizaciones_cierre": {
+   "columnas": {
+    "actualizado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "cotizacion_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "creado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "es_cliente_nuevo": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "es_entrega_express": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "false"
+    ],
+    "estado": [
+     "character varying",
+     20,
+     null,
+     null,
+     "NO",
+     "'EMITIDA'::character varying"
+    ],
+    "mensaje_whatsapp": [
+     "text",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "monto_descuento": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     "0.00"
+    ],
+    "monto_recargo": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     "0.00"
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "nombre_prospecto": [
+     "character varying",
+     100,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "snapshot_reglas_json": [
+     "jsonb",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "subtotal": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     ""
+    ],
+    "telefono_prospecto": [
+     "character varying",
+     15,
+     null,
+     null,
+     "YES",
+     ""
+    ],
+    "total_neto": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((estado)::text = ANY ((ARRAY['EMITIDA'::character varying, 'ENVIADA_WA'::character varying, 'GANADA'::character varying, 'PERDIDA'::character varying])::text[])))",
+    "CHECK (((telefono_prospecto IS NULL) OR ((telefono_prospecto)::text ~ '^[0-9]{9,15}$'::text)))",
+    "CHECK ((monto_descuento >= (0)::numeric))",
+    "CHECK ((monto_recargo >= (0)::numeric))",
+    "CHECK ((subtotal > (0)::numeric))",
+    "CHECK ((total_neto = ((subtotal + monto_recargo) - monto_descuento)))",
+    "CHECK ((total_neto > (0)::numeric))",
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (cotizacion_id)"
+   ],
+   "opciones": [
+    "fillfactor=80"
+   ]
+  },
+  "eventos_escaneo_radar": {
+   "columnas": {
+    "ejecutado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "escaneo_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "estado": [
+     "character varying",
+     20,
+     null,
+     null,
+     "NO",
+     "'COMPLETADO'::character varying"
+    ],
+    "fuente_datos": [
+     "character varying",
+     30,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "radio_busqueda_km": [
+     "numeric",
+     null,
+     4,
+     2,
+     "NO",
+     ""
+    ],
+    "total_analizados": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "0"
+    ],
+    "total_fricciones": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "0"
+    ]
+   },
+   "restricciones": [
+    "CHECK (((estado)::text = ANY ((ARRAY['EN_PROCESO'::character varying, 'COMPLETADO'::character varying, 'FALLIDO'::character varying])::text[])))",
+    "CHECK (((fuente_datos)::text = ANY ((ARRAY['OVERPASS_OSM'::character varying, 'GOOGLE_PLACES'::character varying, 'DATASET_FALLBACK'::character varying])::text[])))",
+    "CHECK ((total_analizados >= 0))",
+    "CHECK ((total_fricciones >= 0))",
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (escaneo_id)"
+   ],
+   "opciones": []
+  },
+  "hallazgos_friccion": {
+   "columnas": {
+    "calificacion": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     ""
+    ],
+    "competidor_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "creado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "escaneo_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "hallazgo_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "resumen_dolor": [
+     "character varying",
+     250,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "texto_resena": [
+     "text",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "tipo_friccion_id": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((calificacion >= 1) AND (calificacion <= 3)))",
+    "FOREIGN KEY (competidor_id) REFERENCES competidores_locales(competidor_id) ON DELETE RESTRICT",
+    "FOREIGN KEY (escaneo_id) REFERENCES eventos_escaneo_radar(escaneo_id) ON DELETE RESTRICT",
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "FOREIGN KEY (tipo_friccion_id) REFERENCES cat_tipos_friccion(tipo_friccion_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (hallazgo_id)"
+   ],
+   "opciones": [
+    "fillfactor=100"
+   ]
+  },
+  "negocios": {
+   "columnas": {
+    "activo": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "actualizado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "creado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "descripcion": [
+     "character varying",
+     400,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "distrito": [
+     "character varying",
+     80,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "latitud": [
+     "numeric",
+     null,
+     9,
+     6,
+     "NO",
+     ""
+    ],
+    "longitud": [
+     "numeric",
+     null,
+     9,
+     6,
+     "NO",
+     ""
+    ],
+    "monto_ventas_ganadas": [
+     "numeric",
+     null,
+     12,
+     2,
+     "NO",
+     "0.00"
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "radio_cobertura_km": [
+     "numeric",
+     null,
+     4,
+     2,
+     "NO",
+     "3.00"
+    ],
+    "razon_comercial": [
+     "character varying",
+     120,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "rubro_id": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     ""
+    ],
+    "total_cotizaciones": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "0"
+    ],
+    "total_escaneos": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "0"
+    ],
+    "total_ventas_ganadas": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "0"
+    ],
+    "usuario_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "whatsapp_numero": [
+     "character varying",
+     15,
+     null,
+     null,
+     "NO",
+     ""
+    ]
+   },
+   "restricciones": [
+    "CHECK (((latitud >= ('-90'::integer)::numeric) AND (latitud <= (90)::numeric)))",
+    "CHECK (((longitud >= ('-180'::integer)::numeric) AND (longitud <= (180)::numeric)))",
+    "CHECK (((radio_cobertura_km >= 0.50) AND (radio_cobertura_km <= 25.00)))",
+    "CHECK (((whatsapp_numero)::text ~ '^[0-9]{10,15}$'::text))",
+    "CHECK ((monto_ventas_ganadas >= (0)::numeric))",
+    "CHECK ((total_cotizaciones >= 0))",
+    "CHECK ((total_escaneos >= 0))",
+    "CHECK ((total_ventas_ganadas >= 0))",
+    "FOREIGN KEY (rubro_id) REFERENCES cat_rubros(rubro_id) ON DELETE RESTRICT",
+    "FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (negocio_id)"
+   ],
+   "opciones": [
+    "fillfactor=80"
+   ]
+  },
+  "productos": {
+   "columnas": {
+    "activo": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "creado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "descripcion": [
+     "character varying",
+     300,
+     null,
+     null,
+     "YES",
+     ""
+    ],
+    "negocio_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "nombre": [
+     "character varying",
+     120,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "permite_express": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "precio_base": [
+     "numeric",
+     null,
+     10,
+     2,
+     "NO",
+     ""
+    ],
+    "producto_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ],
+    "sku": [
+     "character varying",
+     30,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "stock_disponible": [
+     "integer",
+     null,
+     32,
+     0,
+     "NO",
+     "0"
+    ],
+    "tiempo_prep_horas": [
+     "smallint",
+     null,
+     16,
+     0,
+     "NO",
+     "24"
+    ]
+   },
+   "restricciones": [
+    "CHECK ((precio_base > (0)::numeric))",
+    "CHECK ((stock_disponible >= 0))",
+    "CHECK ((tiempo_prep_horas >= 1))",
+    "FOREIGN KEY (negocio_id) REFERENCES negocios(negocio_id) ON DELETE RESTRICT",
+    "PRIMARY KEY (producto_id)",
+    "UNIQUE (negocio_id, sku)"
+   ],
+   "opciones": [
+    "fillfactor=80"
+   ]
+  },
+  "usuarios": {
+   "columnas": {
+    "activo": [
+     "boolean",
+     null,
+     null,
+     null,
+     "NO",
+     "true"
+    ],
+    "correo": [
+     "character varying",
+     120,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "creado_en": [
+     "timestamp with time zone",
+     null,
+     null,
+     null,
+     "NO",
+     "now()"
+    ],
+    "nombre_completo": [
+     "character varying",
+     120,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "password_hash": [
+     "character varying",
+     255,
+     null,
+     null,
+     "NO",
+     ""
+    ],
+    "rol": [
+     "character varying",
+     20,
+     null,
+     null,
+     "NO",
+     "'EMPRENDEDOR'::character varying"
+    ],
+    "usuario_id": [
+     "uuid",
+     null,
+     null,
+     null,
+     "NO",
+     "gen_random_uuid()"
+    ]
+   },
+   "restricciones": [
+    "CHECK (((rol)::text = ANY ((ARRAY['EMPRENDEDOR'::character varying, 'ADMIN'::character varying])::text[])))",
+    "PRIMARY KEY (usuario_id)",
+    "UNIQUE (correo)"
+   ],
+   "opciones": []
+  }
+ },
+ "indices": [
+  "CREATE INDEX ON public.bitacora_auditoria USING btree (entidad_afectada, registrado_en DESC)",
+  "CREATE INDEX ON public.campanas_adaptativas USING btree (negocio_id, creado_en DESC)",
+  "CREATE INDEX ON public.cat_reglas_negocio USING btree (negocio_id, tipo_regla, activa)",
+  "CREATE INDEX ON public.cotizaciones_cierre USING btree (negocio_id, estado, creado_en DESC)",
+  "CREATE INDEX ON public.eventos_escaneo_radar USING btree (negocio_id, ejecutado_en DESC)",
+  "CREATE INDEX ON public.hallazgos_friccion USING btree (negocio_id, creado_en DESC)",
+  "CREATE INDEX ON public.negocios USING btree (usuario_id)",
+  "CREATE INDEX ON public.productos USING btree (negocio_id, activo)",
+  "CREATE UNIQUE INDEX ON public.mv_resumen_comercial_negocio USING btree (negocio_id)"
+ ],
+ "triggers": [
+  "trg_cotizacion_comportamiento ON cotizaciones_cierre -> fn_actualizar_cuenta_cotizacion",
+  "trg_escaneo_comportamiento ON eventos_escaneo_radar -> fn_acumular_escaneo_radar"
+ ],
+ "funciones": [
+  "armor",
+  "armor",
+  "crypt",
+  "dearmor",
+  "decrypt",
+  "decrypt_iv",
+  "digest",
+  "digest",
+  "encrypt",
+  "encrypt_iv",
+  "fn_actualizar_cuenta_cotizacion",
+  "fn_acumular_escaneo_radar",
+  "gen_random_bytes",
+  "gen_random_uuid",
+  "gen_salt",
+  "gen_salt",
+  "hmac",
+  "hmac",
+  "pgp_armor_headers",
+  "pgp_key_id",
+  "pgp_pub_decrypt",
+  "pgp_pub_decrypt",
+  "pgp_pub_decrypt",
+  "pgp_pub_decrypt_bytea",
+  "pgp_pub_decrypt_bytea",
+  "pgp_pub_decrypt_bytea",
+  "pgp_pub_encrypt",
+  "pgp_pub_encrypt",
+  "pgp_pub_encrypt_bytea",
+  "pgp_pub_encrypt_bytea",
+  "pgp_sym_decrypt",
+  "pgp_sym_decrypt",
+  "pgp_sym_decrypt_bytea",
+  "pgp_sym_decrypt_bytea",
+  "pgp_sym_encrypt",
+  "pgp_sym_encrypt",
+  "pgp_sym_encrypt_bytea",
+  "pgp_sym_encrypt_bytea"
+ ],
+ "vista_materializada": [
+  "distrito",
+  "fricciones_detectadas",
+  "monto_ventas_ganadas",
+  "negocio_id",
+  "productos_activos",
+  "razon_comercial",
+  "rubro_nombre",
+  "tasa_conversion_pct",
+  "total_cotizaciones",
+  "total_escaneos",
+  "total_ventas_ganadas",
+  "ultima_alerta_adaptativa"
+ ],
+ "semilla": {
+  "cat_rubros": [
+   "CAFETERIA",
+   "COMIDA_RAPIDA",
+   "REPOSTERIA"
+  ],
+  "cat_tipos_friccion": [
+   "CALIDAD_PRESENTACION",
+   "DEMORA_ENTREGA",
+   "MALA_ATENCION",
+   "PRECIO_DELIVERY",
+   "SIN_OPCIONES_URGENTES"
+  ]
+ }
+}

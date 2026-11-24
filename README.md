@@ -5,9 +5,9 @@ App Android nativa (Kotlin) + API REST propia (FastAPI) + PostgreSQL en la nube 
 ## Equipo
 | Persona | Área | Rama | Carpeta |
 |---|---|---|---|
-| César | Líder · Backend API | `cesar/backend` | `backend/` |
+| César | Líder · Backend API · Base de datos | `cesar/backend` | `backend/`, `database/` |
 | Giancarlos | App Android | `giancarlos/android` | `android/` |
-| Ernesto | Base de datos · Pruebas | `ernesto/db-qa` | `database/`, `docs/pruebas/` |
+| Ernesto | Pruebas (QA) | `ernesto/db-qa` | `docs/pruebas/` |
 
 ## Estructura
 ```text
