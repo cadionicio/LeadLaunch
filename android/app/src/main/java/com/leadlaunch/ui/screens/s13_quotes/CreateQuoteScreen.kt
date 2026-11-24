@@ -134,6 +134,7 @@ fun CreateQuoteScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
+            SimulatedDataBanner(Modifier.padding(bottom = 12.dp))
             Text(
                 text = "Selecciona los productos y cantidades para armar el pedido.",
                 style = MaterialTheme.typography.bodyMedium

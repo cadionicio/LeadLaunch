@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.leadlaunch.data.repository.CampaignRepository
 import com.leadlaunch.ui.components.AppBar
+import com.leadlaunch.ui.components.SimulatedDataBanner
 import com.leadlaunch.ui.components.EmptyState
 import com.leadlaunch.ui.components.PrimaryButton
 import com.leadlaunch.ui.theme.*
@@ -57,6 +58,7 @@ fun CampaignResultScreen(
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
+                SimulatedDataBanner(Modifier.padding(bottom = 12.dp))
                 Surface(
                     color = SuccessSoft,
                     shape = RoundedCornerShape(12.dp),

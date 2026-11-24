@@ -71,6 +71,7 @@ fun QuotePreviewScreen(
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
+                SimulatedDataBanner(Modifier.padding(bottom = 12.dp))
                 // Estado y cliente
                 Card(
                     shape = RoundedCornerShape(14.dp),
