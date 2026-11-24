@@ -1,0 +1,245 @@
+{
+  "aviso": "DATOS FICTICIOS DE DEMOSTRACIÓN. Negocios y reseñas inventados para el modo de respaldo del radar (DATASET_FALLBACK). No representan negocios ni opiniones reales.",
+  "version": 1,
+  "posicion": "Cada competidor se ubica relativo al negocio que escanea: norte_km y este_km son desplazamientos desde su ubicación.",
+  "competidores": [
+    {
+      "id": "demo-rep-001",
+      "nombre": "La Dulcería (demo)",
+      "rubro_codigo": "REPOSTERIA",
+      "norte_km": 1.1,
+      "este_km": 0.6,
+      "calificacion_prom": 2.8,
+      "resenas": [
+        {
+          "calificacion": 2,
+          "texto": "El pedido llegó una hora tarde y la torta era para un cumpleaños."
+        },
+        {
+          "calificacion": 1,
+          "texto": "Nunca llegó el delivery a la hora pactada, tuve que llamar tres veces."
+        },
+        {
+          "calificacion": 3,
+          "texto": "Rica la torta pero la caja llegó aplastada y la decoración dañada."
+        },
+        {
+          "calificacion": 5,
+          "texto": "Muy buen sabor, el keke de naranja es excelente."
+        },
+        {
+          "calificacion": 2,
+          "texto": "No responden los mensajes de WhatsApp, esperé dos días una cotización."
+        },
+        {
+          "calificacion": 4,
+          "texto": "Buena atención en tienda."
+        },
+        {
+          "calificacion": 3,
+          "texto": ""
+        }
+      ]
+    },
+    {
+      "id": "demo-rep-002",
+      "nombre": "Postres & Más (demo)",
+      "rubro_codigo": "REPOSTERIA",
+      "norte_km": -0.8,
+      "este_km": 1.4,
+      "calificacion_prom": 3.1,
+      "resenas": [
+        {
+          "calificacion": 2,
+          "texto": "Demasiado caro para el tamaño de la porción."
+        },
+        {
+          "calificacion": 3,
+          "texto": "El costo del envío es casi lo mismo que el postre."
+        },
+        {
+          "calificacion": 1,
+          "texto": "Pedí una torta para el mismo día y me dijeron que solo aceptan pedidos con 48 horas de anticipación."
+        },
+        {
+          "calificacion": 4,
+          "texto": "Los alfajores son muy buenos."
+        },
+        {
+          "calificacion": 5,
+          "texto": "Excelente cheesecake, volveré."
+        },
+        {
+          "calificacion": 2,
+          "texto": "La entrega se retrasó y nadie me avisó."
+        }
+      ]
+    },
+    {
+      "id": "demo-rep-003",
+      "nombre": "Sweet House (demo)",
+      "rubro_codigo": "REPOSTERIA",
+      "norte_km": 2.0,
+      "este_km": -1.2,
+      "calificacion_prom": 2.9,
+      "resenas": [
+        {
+          "calificacion": 1,
+          "texto": "Trato grosero cuando reclamé por un error en el pedido."
+        },
+        {
+          "calificacion": 2,
+          "texto": "El bizcocho estaba seco y no se sentía fresco."
+        },
+        {
+          "calificacion": 3,
+          "texto": "Bonita presentación pero llegó tarde, después de que empezó la reunión."
+        },
+        {
+          "calificacion": 2,
+          "texto": "Pedí una torta para hoy y no tenían nada disponible, todo es con pedido previo."
+        },
+        {
+          "calificacion": 5,
+          "texto": "Me encantó la torta de lúcuma."
+        }
+      ]
+    },
+    {
+      "id": "demo-rep-004",
+      "nombre": "Horno Dulce Barranco (demo)",
+      "rubro_codigo": "REPOSTERIA",
+      "norte_km": -2.6,
+      "este_km": -0.9,
+      "calificacion_prom": 4.2,
+      "resenas": [
+        {
+          "calificacion": 5,
+          "texto": "Todo perfecto, puntuales y deliciosos."
+        },
+        {
+          "calificacion": 4,
+          "texto": "Muy rico, un poco caro pero vale la pena."
+        },
+        {
+          "calificacion": 3,
+          "texto": "No hacen pedidos urgentes, todo es con anticipación."
+        }
+      ]
+    },
+    {
+      "id": "demo-rep-005",
+      "nombre": "Tortas Express Lince (demo)",
+      "rubro_codigo": "REPOSTERIA",
+      "norte_km": 4.5,
+      "este_km": 2.5,
+      "calificacion_prom": 3.4,
+      "resenas": [
+        {
+          "calificacion": 2,
+          "texto": "Cobran un delivery elevado aunque estoy a pocas cuadras."
+        },
+        {
+          "calificacion": 3,
+          "texto": "La crema estaba derretida cuando llegó."
+        }
+      ]
+    },
+    {
+      "id": "demo-cr-001",
+      "nombre": "Bocaditos Rápidos (demo)",
+      "rubro_codigo": "COMIDA_RAPIDA",
+      "norte_km": 0.9,
+      "este_km": -0.7,
+      "calificacion_prom": 3.0,
+      "resenas": [
+        {
+          "calificacion": 1,
+          "texto": "Esperé más de una hora por unos tequeños, el delivery nunca llegó a tiempo."
+        },
+        {
+          "calificacion": 2,
+          "texto": "Las empanadas llegaron frías y aplastadas."
+        },
+        {
+          "calificacion": 3,
+          "texto": "El precio subió y las porciones son más pequeñas."
+        },
+        {
+          "calificacion": 4,
+          "texto": "Buena variedad de bocaditos."
+        }
+      ]
+    },
+    {
+      "id": "demo-cr-002",
+      "nombre": "Sanguchería del Parque (demo)",
+      "rubro_codigo": "COMIDA_RAPIDA",
+      "norte_km": -1.5,
+      "este_km": 1.0,
+      "calificacion_prom": 3.6,
+      "resenas": [
+        {
+          "calificacion": 2,
+          "texto": "No contestan el teléfono para hacer pedidos."
+        },
+        {
+          "calificacion": 3,
+          "texto": "Para eventos no aceptan pedidos de último momento."
+        },
+        {
+          "calificacion": 5,
+          "texto": "El mejor pan con chicharrón de la zona."
+        }
+      ]
+    },
+    {
+      "id": "demo-caf-001",
+      "nombre": "Café Aroma (demo)",
+      "rubro_codigo": "CAFETERIA",
+      "norte_km": 0.5,
+      "este_km": 0.9,
+      "calificacion_prom": 3.2,
+      "resenas": [
+        {
+          "calificacion": 2,
+          "texto": "El café llegó frío y el postre derramado en la bolsa."
+        },
+        {
+          "calificacion": 3,
+          "texto": "Atención lenta, nos ignoraron 20 minutos."
+        },
+        {
+          "calificacion": 2,
+          "texto": "Muy caro el delivery para un café."
+        },
+        {
+          "calificacion": 5,
+          "texto": "Ambiente agradable."
+        }
+      ]
+    },
+    {
+      "id": "demo-caf-002",
+      "nombre": "Dulce Taza (demo)",
+      "rubro_codigo": "CAFETERIA",
+      "norte_km": -1.0,
+      "este_km": -1.8,
+      "calificacion_prom": 2.7,
+      "resenas": [
+        {
+          "calificacion": 1,
+          "texto": "El pedido demoró muchísimo y llegó incompleto."
+        },
+        {
+          "calificacion": 2,
+          "texto": "Pedí un postre para hoy mismo y no tenían opciones express."
+        },
+        {
+          "calificacion": 4,
+          "texto": "Buenos postres."
+        }
+      ]
+    }
+  ]
+}

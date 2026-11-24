@@ -10,12 +10,15 @@ class Settings(BaseSettings):
 
     database_url: str = ""
 
-    jwt_secret: str = "cambiar-en-produccion"
+    jwt_secret: str = "solo-para-desarrollo-local-cambiar-en-produccion-0000"
     jwt_algoritmo: str = "HS256"
     jwt_expira_min: int = 1440
 
     gemini_api_key: str = ""
     overpass_url: str = "https://overpass-api.de/api/interpreter"
+
+    # Vacío = database/fallback/radar_dataset.json del repositorio
+    radar_dataset_path: str = ""
 
 
 settings = Settings()
