@@ -58,3 +58,8 @@
 1. En Postman: **Import** → `LeadLaunch_QA.postman_collection.json`.
 2. Ejecuta la colección completa con **Run collection**, en orden. Cada solicitud tiene sus *tests* de estado HTTP y guarda tokens e IDs en variables.
 3. Los correos de prueba se generan con `{{$timestamp}}`, así que se puede repetir sin choques.
+
+## 5. Criterios de salida y validación en producción (Fase 1)
+- **Entorno verificado:** [LeadLaunch API Swagger UI (v0.5.1)](https://leadlaunch-api.onrender.com/docs) operativo con conexión estable a PostgreSQL (Neon).
+- **Cobertura alcanzada:** 7/7 casos ejecutables de la Fase 1 aprobados por **Ernesto** (`ernesto@uni.edu.pe`).
+- **Alcance cerrado:** Los casos `CP-04`, `CP-05` y `CP-09` quedan bloqueados por alcance hasta el despliegue de la Fase 2.
