@@ -51,9 +51,9 @@ Trabajamos con **Scrum comprimido** guiado por **checkpoints de integración**:
 
 | Persona | Área principal | Rama personal | Carpeta que le pertenece |
 |---|---|---|---|
-| **César** | Líder, GitHub, Backend API (FastAPI): auth, negocio, catálogo, reglas, radar, IA, cotizaciones, despliegue del backend, integración y merges | `cesar/backend` | `/backend` |
+| **César** | Líder, GitHub, Backend API (FastAPI): auth, negocio, catálogo, reglas, radar, IA, cotizaciones, despliegue del backend, base de datos en Neon, integración y merges | `cesar/backend` | `/backend`, `/database` |
 | **Giancarlos** | App Android (Kotlin): diseño (tokens y componentes), las 17 pantallas, Retrofit + JWT, mapa, WhatsApp Intent | `giancarlos/android` | `/android` |
-| **Ernesto** | Base de datos en Neon (ejecutar DDL y semillas), dataset de respaldo del radar, colección de pruebas y ejecución de la matriz CP-01 a CP-10 | `ernesto/db-qa` | `/database` y `/docs/pruebas` |
+| **Ernesto** | Pruebas (QA): colección de pruebas de la API y ejecución de la matriz CP-01 a CP-10 con evidencias | `ernesto/db-qa` | `/docs/pruebas` |
 
 Reglas de convivencia:
 - **No editar la carpeta de otro.** Si necesitas algo ahí, pídelo en el grupo.
@@ -81,7 +81,7 @@ leadlaunch/
 │   ├── requirements.txt
 │   └── .env.example
 ├── android/                 ← Giancarlos (proyecto Android Studio)
-├── database/                ← Ernesto
+├── database/                ← César
 │   ├── 01_ddl.sql
 │   ├── 02_seed.sql
 │   ├── 03_seed_demo.sql     (datos de la maqueta: Dulce Punto, productos, etc.)
@@ -248,6 +248,7 @@ Estas decisiones resuelven pendientes de la especificación UX (P01–P16) solo 
 | D10 | Mapa en Android | **osmdroid (OpenStreetMap)**, gratis y sin API key. |
 | D11 | Refresco del dashboard | El backend ejecuta `REFRESH MATERIALIZED VIEW CONCURRENTLY` después de crear producto, escanear y cambiar estado de cotización. |
 | D12 | Datos del radar de respaldo | Si se usa el dataset, la respuesta y la UI dicen "Datos de referencia (demo)". Nunca se presentan como reseñas reales. |
+| D14 | Fuente real del radar | Overpass/OSM no entrega reseñas. En Fase 1 el radar usa solo el dataset ficticio (`DATASET_FALLBACK`) con el aviso de demo. Una fuente real con reseñas (p. ej. Google Places) se decide en Fase 2. Nunca se mezclan reseñas ficticias con nombres de negocios reales. |
 | D13 | Modelo de IA | El documento dice Gemini 1.5 Flash; esa versión puede estar retirada. Usar el modelo **Flash vigente** del Free Tier de Google AI Studio (se confirma en Fase 2). |
 
 Pendientes para Fase 2: P07 (datos del prospecto), P08 (confirmar ENVIADA_WA al volver de WhatsApp), P09 (guion 15 s), P10 (GET de historiales), P11 (acumulación), P13 (multi-negocio), P15/P16.

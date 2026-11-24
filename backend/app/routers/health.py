@@ -1,10 +1,17 @@
 from fastapi import APIRouter
+from fastapi.responses import RedirectResponse
 
 from app.core.config import settings
 from app.core.database import get_conn
 from app.core.errors import AppError
 
 router = APIRouter(tags=["Salud"])
+
+
+@router.get("/", include_in_schema=False)
+def raiz():
+    """La raíz lleva a la documentación Swagger."""
+    return RedirectResponse(url="/docs")
 
 
 @router.get("/health")

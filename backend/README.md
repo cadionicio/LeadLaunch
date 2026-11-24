@@ -19,8 +19,13 @@ uvicorn app.main:app --reload
 
 ## Pruebas
 
-```powershell
+```bash
 pytest
+```
+Sin más configuración corren las pruebas que no usan base de datos; las demás aparecen como *skipped*.
+Para correr también las de base de datos, usa una base **de prueba** (un *branch* `test` en Neon, por ejemplo) con el DDL ejecutado. **Nunca la base de la demo:**
+```bash
+TEST_DATABASE_URL="postgresql://..." pytest
 ```
 
 ## Capas
