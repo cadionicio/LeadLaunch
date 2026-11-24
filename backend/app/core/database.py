@@ -30,6 +30,11 @@ def get_pool() -> ConnectionPool:
             min_size=1,
             max_size=5,
             kwargs={"row_factory": dict_row},
+            # Neon suspende la base tras ~5 min sin uso y corta las conexiones abiertas.
+            # check: prueba cada conexión antes de entregarla y reemplaza las cortadas.
+            # max_idle: renueva las que llevan más de 4 min sin usarse.
+            check=ConnectionPool.check_connection,
+            max_idle=240,
             open=True,
         )
     return _pool
