@@ -126,6 +126,7 @@ class RadarRepository(
             MockBackend.scanRadar(radiusKm)
         } else {
             safeApiCall { api.scanRadar(businessId, RadarScanRequest(radiusKm)) }
+                .also { if (it is ApiResult.Success) MockBackend.lastScan = it.data }
         }
     }
 
