@@ -17,5 +17,8 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     overpass_url: str = "https://overpass-api.de/api/interpreter"
 
+    # Vacío = database/fallback/radar_dataset.json del repositorio
+    radar_dataset_path: str = ""
+
 
 settings = Settings()
